@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Konves.ChordPro.UnitTests</RootNamespace>
     <AssemblyName>Konves.ChordPro.UnitTests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -98,12 +99,6 @@
     <EmbeddedResource Include="Data\everybody-hurts.cho" />
     <EmbeddedResource Include="Data\love-me-tender.cho" />
     <EmbeddedResource Include="Data\swing-low.cho" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Konves.ChordPro\Konves.ChordPro.csproj">
-      <Project>{6bddadd4-470d-424f-9962-8bcc05c32a22}</Project>
-      <Name>Konves.ChordPro</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
