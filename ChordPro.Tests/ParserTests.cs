@@ -11,6 +11,7 @@ namespace ChordPro.Tests
     public class ParserTests
     {
         private const string resourceName = "ChordPro.Tests.Data.swing-low.cho";
+
         [Fact]
         public void TestParser()
         {
@@ -20,12 +21,10 @@ namespace ChordPro.Tests
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
             using (TextReader reader = new StreamReader(stream))
             {
-                Parser parser = new Parser(reader);
-
+               var parser = new Parser(reader);
                 // Act
                 result = parser.Parse().ToList();
             }
-
             // Assert
             Assert.NotNull(result);
         }

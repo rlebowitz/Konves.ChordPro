@@ -28,6 +28,7 @@ namespace Konves.ChordPro.UnitTests
 			// DoTryParseTest("{asdf asdf asdf:asdf}", false, null, null, null);
 		}
 
+        [Theory]
 		private void DoTryParseTest(string input, bool expectedResult, string expectedKey, string expectedSubKey, string expectedValue)
 		{
 			// Arrange

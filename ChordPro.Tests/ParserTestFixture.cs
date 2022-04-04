@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ChordPro.Lib;
+using System.Collections;
 
 namespace ChordPro.Tests
 {
@@ -60,102 +61,84 @@ namespace ChordPro.Tests
             Assert.Equal(result, expected);
         }
 
-        [Fact]
-        public void SplitIntoBlocksTest()
+        [Theory]
+        [InlineData(null)]
+        public void SplitIntoBlocksTest_Null(string line)
         {
-            DoSplitIntoBlocksTest("asdf [X]asdf asdf", "asdf", "[X]asdf", "asdf");
-            DoSplitIntoBlocksTest("asdf asdf[X] asdf", "asdf", "asdf[X]", "asdf");
-            DoSplitIntoBlocksTest("asdf [x]asdf[x] asdf", "asdf", "[x]asdf[x]", "asdf");
-            DoSplitIntoBlocksTest("asdf asdf[x]asdf asdf", "asdf", "asdf[x]asdf", "asdf");
-            DoSplitIntoBlocksTest("asdf [x][x]asdf[x][x] asdf", "asdf", "[x][x]asdf[x][x]", "asdf");
-            DoSplitIntoBlocksTest("asdf asdf[x][x]asdf asdf", "asdf", "asdf[x][x]asdf", "asdf");
-
-            DoSplitIntoBlocksTest(" [X] ", "[X]");
-            DoSplitIntoBlocksTest(" asdf ", "asdf");
-            DoSplitIntoBlocksTest(" [X]asdf ", "[X]asdf");
-            DoSplitIntoBlocksTest(" asdf[X] ", "asdf[X]");
-            DoSplitIntoBlocksTest(" [x]asdf[x] ", "[x]asdf[x]");
-            DoSplitIntoBlocksTest(" asdf[x]asdf ", "asdf[x]asdf");
-
-            DoSplitIntoBlocksTest("asdf [ X ]asdf asdf", "asdf", "[ X ]asdf", "asdf");
-            DoSplitIntoBlocksTest("asdf asdf[ X ] asdf", "asdf", "asdf[ X ]", "asdf");
-            DoSplitIntoBlocksTest("asdf [ x ]asdf[ x ] asdf", "asdf", "[ x ]asdf[ x ]", "asdf");
-            DoSplitIntoBlocksTest("asdf asdf[ x ]asdf asdf", "asdf", "asdf[ x ]asdf", "asdf");
-            DoSplitIntoBlocksTest("asdf [ x ][ x ]asdf[ x ][ x ] asdf", "asdf", "[ x ][ x ]asdf[ x ][ x ]", "asdf");
-            DoSplitIntoBlocksTest("asdf asdf[ x ][ x ]asdf asdf", "asdf", "asdf[ x ][ x ]asdf", "asdf");
-        }
-
-        [Fact]
-        public void SplitIntoBlocksTest_Null()
-        {
-            // Arrange
-            string line = null;
             // Act
             Assert.Throws<ArgumentNullException>(() => Parser.SplitIntoBlocks(line).ToList());
         }
 
-        [Fact]
+        [Theory]
+        [InlineData("asdf [X]asdf asdf", "asdf", "[X]asdf", "asdf")]
+        [InlineData("asdf asdf[X] asdf", "asdf", "asdf[X]", "asdf")]
+        [InlineData("asdf [x]asdf[x] asdf", "asdf", "[x]asdf[x]", "asdf")]
+        [InlineData("asdf asdf[x]asdf asdf", "asdf", "asdf[x]asdf", "asdf")]
+        [InlineData("asdf [x][x]asdf[x][x] asdf", "asdf", "[x][x]asdf[x][x]", "asdf")]
+        [InlineData("asdf asdf[x][x]asdf asdf", "asdf", "asdf[x][x]asdf", "asdf")]
+        [InlineData(" [X] ", "[X]")]
+        [InlineData(" asdf ", "asdf")]
+        [InlineData(" [X]asdf ", "[X]asdf")]
+        [InlineData(" asdf[X] ", "asdf[X]")]
+        [InlineData(" [x]asdf[x] ", "[x]asdf[x]")]
+        [InlineData(" asdf[x]asdf ", "asdf[x]asdf")]
+        [InlineData("asdf [ X ]asdf asdf", "asdf", "[ X ]asdf", "asdf")]
+        [InlineData("asdf asdf[ X ] asdf", "asdf", "asdf[ X ]", "asdf")]
+        [InlineData("asdf [ x ]asdf[ x ] asdf", "asdf", "[ x ]asdf[ x ]", "asdf")]
+        [InlineData("asdf asdf[ x ]asdf asdf", "asdf", "asdf[ x ]asdf", "asdf")]
+        [InlineData("asdf [ x ][ x ]asdf[ x ][ x ] asdf", "asdf", "[ x ][ x ]asdf[ x ][ x ]", "asdf")]
+        [InlineData("asdf asdf[ x ][ x ]asdf asdf", "asdf", "asdf[ x ][ x ]asdf", "asdf")]
         private void DoSplitIntoBlocksTest(string line, params string[] expectedBlocks)
         {
-            // Arrange
-            // Act
             List<string> result = Parser.SplitIntoBlocks(line).ToList();
-
-            // Assert
             Assert.Equal(expectedBlocks, result);
         }
 
-        [TestMethod]
-        public void SplitIntoSyllablesTest()
+        [Theory]
+        [InlineData("[x]", "[x]")]
+        [InlineData("asdf", "asdf")]
+        [InlineData("[x]asdf", "[x]asdf")]
+        [InlineData("asdf[x]", "asdf", "[x]")]
+        [InlineData("[x]asdf[x]", "[x]asdf", "[x]")]
+        [InlineData("asdf[x]asdf", "asdf", "[x]asdf")]
+        [InlineData("asdf[x][x]asdf", "asdf", "[x]", "[x]asdf")]
+        [InlineData("[x][x]asdf", "[x]", "[x]asdf")]
+        public void SplitIntoSyllablesTest(string block, params string[] expectedSyllables)
         {
-            DoSplitIntoSyllablesTest("[x]", "[x]");
-            DoSplitIntoSyllablesTest("asdf", "asdf");
-            DoSplitIntoSyllablesTest("[x]asdf", "[x]asdf");
-            DoSplitIntoSyllablesTest("asdf[x]", "asdf", "[x]");
-            DoSplitIntoSyllablesTest("[x]asdf[x]", "[x]asdf", "[x]");
-            DoSplitIntoSyllablesTest("asdf[x]asdf", "asdf", "[x]asdf");
-            DoSplitIntoSyllablesTest("asdf[x][x]asdf", "asdf", "[x]", "[x]asdf");
-            DoSplitIntoSyllablesTest("[x][x]asdf", "[x]", "[x]asdf");
-        }
-
-        private void DoSplitIntoSyllablesTest(string block, params string[] expectedSyllables)
-        {
-            // Arrange
-
-            // Act
             List<string> result = Parser.SplitIntoSyllables(block).ToList();
-
-            // Assert
-            CollectionAssert.AreEqual(expectedSyllables, result);
+            Assert.Equal(expectedSyllables, result);
         }
 
-        [TestMethod]
-        public void TryParseChordTest()
+        [Theory]
+        [ClassData(typeof(ParseChordData))]
+        private void DoTryParseChordTest(string s, bool expectedResult, Chord expectedChord)
         {
-            DoTryParseChordTest("[X]", true, new Chord("X"));
-            DoTryParseChordTest("[ X ]", true, new Chord("X"));
-            DoTryParseChordTest("X", false);
-            DoTryParseChordTest("[]", false);
-            DoTryParseChordTest("[X", false);
-            DoTryParseChordTest("X]", false);
-        }
-
-        private void DoTryParseChordTest(string s, bool expectedResult, Chord expectedChord = null)
-        {
-            // Arrange
-
             // Act
-            Chord chord;
-            bool result = Parser.TryParseChord(s, out chord);
-
+            bool result = Parser.TryParseChord(s, out Chord chord);
             // Assert
-            Assert.AreEqual(expectedResult, result);
-            if (ReferenceEquals(expectedChord, null))
-                Assert.IsNull(chord);
-            Assert.AreEqual(expectedChord?.Text, chord?.Text);
+            Assert.Equal(expectedResult, result);
+            if (expectedChord is null)
+            {
+                Assert.Null(chord);
+            }
+            Assert.Equal(expectedChord?.Text, chord?.Text);
         }
 
-        [TestMethod]
+        private class ParseChordData : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                yield return new object[] { "[X]", true, new Chord("X") };
+                yield return new object[] { "[ X ]", true, new Chord("X") };
+                yield return new object[] { "X", false, null };
+                yield return new object[] { "[]", false, null };
+                yield return new object[] { "[X", false, null };
+                yield return new object[] { "X]", false, null };
+            }
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        [Fact]
         public void ParseSyllableTest()
         {
             DoParseSyllableTest("[X]", new Syllable(new Chord("X"), null));
@@ -163,18 +146,18 @@ namespace ChordPro.Tests
             DoParseSyllableTest("asdf", new Syllable(null, "asdf"));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(FormatException))]
+        [Fact]
         public void ParseSyllableTest_Exception()
         {
             // Arrange
-            Parser sut = new Parser(null);
+            var parser = new Parser(null);
             string syllable = "[]";
-
             // Act
-            Syllable result = sut.ParseSyllable(syllable);
+            Assert.Throws<FormatException>(() => parser.ParseSyllable(syllable));
         }
 
+        [Theory]
+        [ClassData(typeof(ParseSyllableData))]
         private void DoParseSyllableTest(string s, Syllable expectedSyllable)
         {
             // Arrange
@@ -184,145 +167,137 @@ namespace ChordPro.Tests
             Syllable result = sut.ParseSyllable(s);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(expectedSyllable?.Chord?.Text, result?.Chord?.Text);
-            Assert.AreEqual(expectedSyllable?.Text, result?.Text);
+            Assert.NotNull(result);
+            Assert.Equal(expectedSyllable?.Chord?.Text, result?.Chord?.Text);
+            Assert.Equal(expectedSyllable?.Text, result?.Text);
         }
 
-        [TestMethod]
-        public void ParseBlockTest()
+        private class ParseSyllableData : IEnumerable<object[]>
         {
-            DoParseBlockTest("[x]", new Chord("x"));
-
-            DoParseBlockTest("asdf", new Word(new[] {
-                new Syllable(null, "asdf")
-            }));
-
-            DoParseBlockTest("[x]asdf", new Word(new[] {
-                new Syllable(new Chord("x"), "asdf")
-            }));
-
-            DoParseBlockTest("asdf[x]", new Word(new[] {
-                new Syllable(null, "asdf"),
-                new Syllable(new Chord("x"), null)
-            }));
-
-            DoParseBlockTest("[x]asdf[x]", new Word(new[] {
-                new Syllable(new Chord("x"), "asdf"),
-                new Syllable(new Chord("x"), null)
-            }));
-
-            DoParseBlockTest("asdf[x]asdf", new Word(new[] {
-                new Syllable(null, "asdf"),
-                new Syllable(new Chord("x"), "asdf")
-            }));
-
-            DoParseBlockTest("asdf[x][x]asdf", new Word(new[] {
-                new Syllable(null, "asdf"),
-                new Syllable(new Chord("x"), null),
-                new Syllable(new Chord("x"), "asdf")
-            }));
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                yield return new object[] { "[X]", new Syllable(new Chord("X"), null) };
+                yield return new object[] { "[X]asdf", new Syllable(new Chord("X"), "asdf") };
+                yield return new object[] { "asdf", new Syllable(null, "asdf") };
+            }
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
+        private class ParseBlockData : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                yield return new object[] { "[x]", new Chord("x") };
+                yield return new object[] { "asdf", new Word(new[] { new Syllable(null, "asdf") }) };
+                yield return new object[] { "[x]asdf", new Word(new[] { new Syllable(new Chord("x"), "asdf") }) };
+                yield return new object[] { "asdf[x]", new Word(new[] { new Syllable(null, "asdf"), new Syllable(new Chord("x"), null) }) };
+                yield return new object[] { "[x]asdf[x]", new Word(new[] {
+                    new Syllable(new Chord("x"), "asdf"),
+                    new Syllable(new Chord("x"), null)})};
+                yield return new object[] { "asdf[x]asdf", new Word(new[] {
+                    new Syllable(null, "asdf"),
+                    new Syllable(new Chord("x"), "asdf")})};
+                yield return new object[] {"asdf[x][x]asdf", new Word(new[] {
+                    new Syllable(null, "asdf"),
+                    new Syllable(new Chord("x"), null),
+                    new Syllable(new Chord("x"), "asdf")})};
+            }
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        [Theory]
+        [ClassData(typeof(ParseBlockData))]
         private void DoParseBlockTest(string s, Block expected)
         {
             // Arrange
-            Parser sut = new Parser(null);
+            var parser = new Parser(null);
 
             // Act
-            Block result = sut.ParseBlock(s);
+            Block result = parser.ParseBlock(s);
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.NotNull(result);
             if (expected is Chord)
             {
-                Assert.IsInstanceOfType(result, typeof(Chord));
+                Assert.IsType<Chord>(result);
 
                 Chord resultChord = result as Chord;
                 Chord expectedChord = expected as Chord;
 
-                Assert.AreEqual(expectedChord.Text, resultChord.Text);
+                Assert.Equal(expectedChord.Text, resultChord.Text);
             }
             else if (expected is Word)
             {
-                Assert.IsInstanceOfType(result, typeof(Word));
+                Assert.IsType<Word>(result);
 
                 Word resultWord = result as Word;
                 Word expectedWord = expected as Word;
 
-                Assert.AreEqual(expectedWord.Syllables.Count, resultWord.Syllables.Count);
+                Assert.Equal(expectedWord.Syllables.Count, resultWord.Syllables.Count);
             }
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(FormatException))]
+        [Fact]
         public void ParseDirectiveTest_NotADirective()
         {
             // Arrange
             string line = "{some invalid format";
-            Parser sut = new Parser(null);
-
+            var parser = new Parser(null);
             // Act
-            Directive result = sut.ParseDirective(line);
+            Assert.Throws<FormatException>(() => parser.ParseDirective(line));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(FormatException))]
+        [Fact]
         public void ParseDirectiveTest_UnknownDirective()
         {
             // Arrange
             string line = "{unknowndirective}";
-            Parser sut = new Parser(null);
+            var parser = new Parser(null);
 
             // Act
-            Directive result = sut.ParseDirective(line);
+            Assert.Throws<FormatException>(() => parser.ParseDirective(line));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(FormatException))]
+        [Fact]
         public void ParseDirectiveTest_InvalidFormat()
         {
             // Arrange
             string line = "{title}"; // Missing value
-            Parser sut = new Parser(null);
+            var parser = new Parser(null);
 
             // Act
-            Directive result = sut.ParseDirective(line);
+            Assert.Throws<FormatException>(() => parser.ParseDirective(line));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseDirectiveTest_StartOfTab()
         {
             // Arrange
             string line = "{start_of_tab}";
             bool expectedIsInTab = true;
-            Parser sut = new Parser(null);
-
+            var parser = new Parser(null);
             // Act
-            Directive result = sut.ParseDirective(line);
-
+            Directive result = parser.ParseDirective(line);
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(expectedIsInTab, sut._isInTab);
+            Assert.NotNull(result);
+            Assert.Equal(expectedIsInTab, parser._isInTab);
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseDirectiveTest_EndOfTab()
         {
             // Arrange
             string line = "{end_of_tab}";
             bool expectedIsInTab = false;
-            Parser sut = new Parser(null);
-
+            var parser = new Parser(null);
             // Act
-            Directive result = sut.ParseDirective(line);
-
+            Directive result = parser.ParseDirective(line);
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(expectedIsInTab, sut._isInTab);
+            Assert.NotNull(result);
+            Assert.Equal(expectedIsInTab, parser._isInTab);
         }
 
-        [TestMethod]
+        [Fact]
         public void ParseTest()
         {
             // Arrange
@@ -334,19 +309,18 @@ namespace ChordPro.Tests
 Song Line preceded by whitespace";
             int expectedLineCount = 5;
             TextReader reader = new StringReader(song);
-            Parser sut = new Parser(reader);
-
+            var parser = new Parser(reader);
             // Act
-            List<ILine> result = sut.Parse().ToList();
+            List<ILine> result = parser.Parse().ToList();
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(expectedLineCount, result.Count);
-            Assert.IsInstanceOfType(result[0], typeof(StartOfTabDirective));
-            Assert.IsInstanceOfType(result[1], typeof(TabLine));
-            Assert.IsInstanceOfType(result[2], typeof(EndOfTabDirective));
-            Assert.IsInstanceOfType(result[3], typeof(SongLine));
-            Assert.IsInstanceOfType(result[4], typeof(SongLine));
+            Assert.NotNull(result);
+            Assert.Equal(expectedLineCount, result.Count);
+            Assert.IsType<StartOfTabDirective>(result[0]);
+            Assert.IsType<TabLine>(result[1]);
+            Assert.IsType<EndOfTabDirective>(result[2]);
+            Assert.IsType<SongLine>(result[3]);
+            Assert.IsType<SongLine>(result[4]);
 
         }
     }
