@@ -1,46 +1,32 @@
-﻿using Xunit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ChordPro.Lib;
+using Xunit;
 
 namespace ChordPro.Tests
 {
     public class DirectiveComponentsTestFixture
     {
-        [TestMethod]
-        public void TryParseTest()
-        {
-            DoTryParseTest("{asdf:qwerty}", true, "asdf", string.Empty, "qwerty");
-            DoTryParseTest("  {  asdf  :  qwerty  }  ", true, "asdf", string.Empty, "qwerty");
-            DoTryParseTest("{asdf abc:qwerty}", true, "asdf", "abc", "qwerty");
-            DoTryParseTest("  {  asdf   abc  :  qwerty  asdf  }  ", true, "asdf", "abc", "qwerty  asdf");
-            DoTryParseTest("{asdf:qwerty}#Comment", true, "asdf", string.Empty, "qwerty");
-            DoTryParseTest("  {  asdf  :  qwerty  }  # Comment", true, "asdf", string.Empty, "qwerty");
-            DoTryParseTest("{asdf abc:qwerty}# Comment", true, "asdf", "abc", "qwerty");
-            DoTryParseTest("  {  asdf   abc  :  qwerty  asdf  }  # Comment", true, "asdf", "abc", "qwerty  asdf");
-
-            DoTryParseTest("{}", false, null, null, null);
-            DoTryParseTest("asdf", false, null, null, null);
-            DoTryParseTest("{:asdf}", false, null, null, null);
-            // DoTryParseTest("{asdf asdf asdf:asdf}", false, null, null, null);
-        }
-
         [Theory]
-        private void DoTryParseTest(string input, bool expectedResult, string expectedKey, string expectedSubKey, string expectedValue)
+        [InlineData("{asdf:qwerty}", true, "asdf", "", "qwerty")]
+        [InlineData("  {  asdf  :  qwerty  }  ", true, "asdf", "", "qwerty")]
+        [InlineData("{asdf abc:qwerty}", true, "asdf", "abc", "qwerty")]
+        [InlineData("  {  asdf   abc  :  qwerty  asdf  }  ", true, "asdf", "abc", "qwerty  asdf")]
+        [InlineData("{asdf:qwerty}#Comment", true, "asdf", "", "qwerty")]
+        [InlineData("  {  asdf  :  qwerty  }  # Comment", true, "asdf", "", "qwerty")]
+        [InlineData("{asdf abc:qwerty}# Comment", true, "asdf", "abc", "qwerty")]
+        [InlineData("  {  asdf   abc  :  qwerty  asdf  }  # Comment", true, "asdf", "abc", "qwerty  asdf")]
+        [InlineData("{}", false, null, null, null)]
+        [InlineData("asdf", false, null, null, null)]
+        [InlineData("{:asdf}", false, null, null, null)]
+        public void TryParseTest(string input, bool expectedResult, string expectedKey, string expectedSubKey, string expectedValue)
         {
-            // Arrange
-            DirectiveComponents components;
-
             // Act
-            bool result = DirectiveComponents.TryParse(input, out components);
-
+            bool result = DirectiveComponents.TryParse(input, out DirectiveComponents components);
             // Assert
-            Assert.AreEqual(expectedResult, result);
-            Assert.AreEqual(expectedKey, components?.Key);
-            Assert.AreEqual(expectedSubKey, components?.SubKey);
-            Assert.AreEqual(expectedValue, components?.Value);
+            Assert.Equal(expectedResult, result);
+            Assert.Equal(expectedKey, components?.Key);
+            Assert.Equal(expectedSubKey, components?.SubKey);
+            Assert.Equal(expectedValue, components?.Value);
         }
+        
     }
 }
