@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ChordPro.Tests.DirectiveHandlers
 {
-x	public class NewSongHandlerTestFixture : KeyOnlyBaseTestFixture<NewSongDirective>
+	public class NewSongHandlerTestFixture : KeyOnlyBaseTestFixture<NewSongDirective>
 	{
 		public NewSongHandlerTestFixture() : base("{new_song}", "{ns}", NewSongHandler.Instance) { }
 

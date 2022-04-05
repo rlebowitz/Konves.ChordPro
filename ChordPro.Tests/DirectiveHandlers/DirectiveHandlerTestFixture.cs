@@ -2,6 +2,8 @@
 using ChordPro.Lib.DirectiveHandlers;
 using ChordPro.Lib.Directives;
 using Moq;
+using Moq.Protected;
+using System;
 using Xunit;
 
 namespace ChordPro.Tests.DirectiveHandlers
@@ -80,24 +82,19 @@ namespace ChordPro.Tests.DirectiveHandlers
 		{
 			// Arrange
 			string key = nameof(key);
-
 			DirectiveComponents components = new DirectiveComponents(key, null, null);
 
 			var mock = new Mock<DirectiveHandler>();
-
 			mock.Setup(h => h.LongName).Returns(key);
 			mock.Setup(h => h.SubKey).Returns(ComponentPresence.Required);
 			mock.Setup(h => h.Value).Returns(ComponentPresence.Optional);
 
-			DirectiveHandler sut = mock.Object;
-
-			// Act
-			Directive directive;
-			bool result = sut.TryParse(components, out directive);
-
-			// Assert
-			Assert.IsFalse(result);
-			Assert.IsNull(directive);
+			DirectiveHandler handler = mock.Object;
+            // Act
+            bool result = handler.TryParse(components, out Directive directive);
+            // Assert
+            Assert.False(result);
+			Assert.Null(directive);
 		}
 
 		[Fact]
@@ -107,91 +104,76 @@ namespace ChordPro.Tests.DirectiveHandlers
 			// Arrange
 			string key = nameof(key);
 			string subkey = nameof(subkey);
-
-			DirectiveComponents components = new DirectiveComponents(key, subkey, null);
+			var components = new DirectiveComponents(key, subkey, null);
 
 			var mock = new Mock<DirectiveHandler>();
-
 			mock.Setup(h => h.LongName).Returns(key);
 			mock.Setup(h => h.SubKey).Returns(ComponentPresence.NotAllowed);
 			mock.Setup(h => h.Value).Returns(ComponentPresence.Optional);
 
-			DirectiveHandler sut = mock.Object;
-
-			// Act
-			Directive directive;
-			bool result = sut.TryParse(components, out directive);
-
-			// Assert
-			Assert.IsFalse(result);
-			Assert.IsNull(directive);
+			DirectiveHandler handler = mock.Object;
+            // Act
+            bool result = handler.TryParse(components, out Directive directive);
+            // Assert
+            Assert.False(result);
+			Assert.Null(directive);
 		}
 
-		[Fact]
+		[Theory]
 		[Trait("Category", "DirectiveHandler")]
-		public void GetSubKeyStringTest()
+        [InlineData("asdf", ComponentPresence.NotAllowed, null)]
+        [InlineData("asdf", ComponentPresence.Optional, " asdf")]
+        [InlineData("asdf", ComponentPresence.Required, " asdf")]
+		public void GetSubKeyStringTest(string subkey, ComponentPresence subKeyPresence, string expectedResult)
 		{
-			DoGetSubKeyStringTest("asdf", ComponentPresence.NotAllowed, null);
-			DoGetSubKeyStringTest("asdf", ComponentPresence.Optional, " asdf");
-			DoGetSubKeyStringTest("asdf", ComponentPresence.Required, " asdf");
+			// Arrange
+			var mock = new Mock<DirectiveHandler>();
+			mock.Setup(h => h.SubKey).Returns(subKeyPresence);
+			DirectiveHandler handler = mock.Object;
+			// Act
+			string result = handler.GetSubKeyString(subkey);
+			// Assert
+			Assert.Equal(expectedResult, result);
 		}
 
 		private void DoGetSubKeyStringTest(string subkey, ComponentPresence subKeyPresence, string expectedResult)
 		{
 			// Arrange
 			var mock = new Mock<DirectiveHandler>();
-
 			mock.Setup(h => h.SubKey).Returns(subKeyPresence);
-
-			DirectiveHandler sut = mock.Object;
-
+			DirectiveHandler handler = mock.Object;
 			// Act
-			string result = sut.GetSubKeyString(subkey);
-
+			string result = handler.GetSubKeyString(subkey);
 			// Assert
-			Assert.AreEqual(expectedResult, result);
+			Assert.Equal(expectedResult, result);
 		}
 
-		[Fact]
+		[Theory]
 		[Trait("Category", "DirectiveHandler")]
-		public void GetValueStringTest()
-		{
-			DoGetValueStringTest("asdf", ComponentPresence.NotAllowed, null);
-			DoGetValueStringTest("asdf", ComponentPresence.Optional, ": asdf");
-			DoGetValueStringTest("asdf", ComponentPresence.Required, ": asdf");
-
-			DoGetValueStringTest(null, ComponentPresence.NotAllowed, null);
-			DoGetValueStringTest(null, ComponentPresence.Optional, null);
-			DoGetValueStringTest(null, ComponentPresence.Required, null);
-		}
-
-		private void DoGetValueStringTest(string value, ComponentPresence valuePresence, string expectedResult)
+        [InlineData("asdf", ComponentPresence.NotAllowed, null)]
+        [InlineData("asdf", ComponentPresence.Optional, ": asdf")]
+        [InlineData("asdf", ComponentPresence.Required, ": asdf")]
+        [InlineData(null, ComponentPresence.NotAllowed, null)]
+        [InlineData(null, ComponentPresence.Optional, null)]
+        [InlineData(null, ComponentPresence.Required, null)]
+		public void GetValueStringTest(string value, ComponentPresence valuePresence, string expectedResult)
 		{
 			// Arrange
 			var mock = new Mock<DirectiveHandler>();
-
 			mock.Setup(h => h.Value).Returns(valuePresence);
-
-			DirectiveHandler sut = mock.Object;
-
+			DirectiveHandler handler = mock.Object;
 			// Act
-			string result = sut.GetValueString(value);
-
+			string result = handler.GetValueString(value);
 			// Assert
-			Assert.AreEqual(expectedResult, result);
+			Assert.Equal(expectedResult, result);
 		}
 
-		[Fact]
+		[Theory]
 		[Trait("Category", "DirectiveHandler")]
-		public void GetStringTest()
+        [InlineData("longName", "shortName", "subkey", "value", false, "{longName subkey: value}")]
+        [InlineData("longName", "shortName", "subkey", "value", true, "{shortName subkey: value}")]
+		public void GetStringTest(string longName, string shortName, string subkey, string value, bool shorten, string expected)
 		{
-			DoGetStringTest("longName", "shortName", "subkey", "value", false, "{longName subkey: value}");
-			DoGetStringTest("longName", "shortName", "subkey", "value", true, "{shortName subkey: value}");
-		}
-
-		private void DoGetStringTest(string longName, string shortName, string subkey, string value, bool shorten, string expected)
-		{
-			// Arrange
 			Directive directive = new Mock<Directive>().Object;
 
 			var mock = new Mock<DirectiveHandler>();
@@ -202,26 +184,22 @@ namespace ChordPro.Tests.DirectiveHandlers
 			mock.Setup(h => h.SubKey).Returns(ComponentPresence.Optional);
 			mock.Setup(h => h.Value).Returns(ComponentPresence.Optional);
 
-			DirectiveHandler sut = mock.Object;
-
+			DirectiveHandler handler = mock.Object;
 			// Act
-			string result = sut.GetString(directive, shorten);
-
+			string result = handler.GetString(directive, shorten);
 			// Assert
-			Assert.AreEqual(expected, result);
+			Assert.Equal(expected, result);
 		}
 
 		[Fact]
 		[Trait("Category", "DirectiveHandler")]
-		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetStringTest_Null()
 		{
 			// Arrange
 			var mock = new Mock<DirectiveHandler>();
-			DirectiveHandler sut = mock.Object;
-
+			DirectiveHandler handler = mock.Object;
 			// Act
-			string result = sut.GetString(null);
+			Assert.Throws<ArgumentNullException>(() => handler.GetString(null));
 		}
 	}
 }
