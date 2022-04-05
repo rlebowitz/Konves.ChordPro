@@ -3,19 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32317.152
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B1633C4E-0781-4167-8D41-CC4D20281648}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{9945B495-4B8D-4D68-A1BD-BA69866A202B}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
 		coverage.cmd = coverage.cmd
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Konves.ChordPro.UnitTests", "tests\Konves.ChordPro.UnitTests\Konves.ChordPro.UnitTests.csproj", "{B3436019-15F5-4406-9B9D-65F57FFCDCA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChordPro.Lib", "ChordPro.Lib\ChordPro.Lib.csproj", "{E65B7EF8-3629-4DC3-9596-918795AA5009}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChordPro.Lib", "ChordPro.Lib\ChordPro.Lib.csproj", "{E65B7EF8-3629-4DC3-9596-918795AA5009}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChordPro.Tests", "ChordPro.Tests\ChordPro.Tests.csproj", "{78ADC87D-DE32-4F1E-BE89-B04F1BC4C86C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChordPro.Tests", "ChordPro.Tests\ChordPro.Tests.csproj", "{78ADC87D-DE32-4F1E-BE89-B04F1BC4C86C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B3436019-15F5-4406-9B9D-65F57FFCDCA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B3436019-15F5-4406-9B9D-65F57FFCDCA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B3436019-15F5-4406-9B9D-65F57FFCDCA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B3436019-15F5-4406-9B9D-65F57FFCDCA3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E65B7EF8-3629-4DC3-9596-918795AA5009}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E65B7EF8-3629-4DC3-9596-918795AA5009}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E65B7EF8-3629-4DC3-9596-918795AA5009}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -38,9 +30,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{B3436019-15F5-4406-9B9D-65F57FFCDCA3} = {B1633C4E-0781-4167-8D41-CC4D20281648}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A4BDB6A6-71C4-421C-A826-71F071560A38}
