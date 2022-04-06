@@ -27,7 +27,7 @@ namespace ChordPro.Lib
             throw new FormatException("Directive is not in the format {key[ subkey][:value]}");
         }
 
-        public static bool TryParse(string s, out DirectiveComponents? components)
+        public static bool TryParse(string s, out DirectiveComponents components)
         {
             Match match = DirectiveRegex.Match(s);
 
@@ -36,13 +36,15 @@ namespace ChordPro.Lib
                 components = null;
                 return false;
             }
-            components = new DirectiveComponents
+            var key = match.Groups["key"]?.Value;
+            var subKey = match.Groups["subkey"]?.Value;
+            var value = match.Groups["value"]?.Value;
+            if (key == null)
             {
-                Key = match.Groups["key"]?.Value.ToLower().Trim(),
-                SubKey = match.Groups["subkey"]?.Value.Trim(),
-                Value = match.Groups["value"]?.Value.Trim()
-            };
-
+                components = null;
+                return false;
+            }
+            components = new DirectiveComponents(key.ToLower().Trim(), subKey?.Trim(), value?.Trim()); 
             return true;
         }
 

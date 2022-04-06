@@ -7,22 +7,27 @@ namespace ChordPro.Lib
 {
     internal sealed class Parser
     {
+        private TextReader TextReader { get; }
+        private IReadOnlyDictionary<string, DirectiveHandler> DirectiveParsers { get; }
+        internal bool IsInTab { get; set; } = false;
+        private int LineNumber { get; set; } = 0;
+
         internal Parser(TextReader textReader) : this(textReader, null)
         {
         }
 
         internal Parser(TextReader textReader, IEnumerable<DirectiveHandler> customHandlers)
         {
-            _textReader = textReader;
-            _directiveParsers = DirectiveHandlerUtility.GetHandlersDictionaryByName(customHandlers);
+            TextReader = textReader;
+            DirectiveParsers = DirectiveHandlerUtility.GetHandlersDictionaryByName(customHandlers);
         }
 
         internal IEnumerable<ILine> Parse()
         {
             string line;
-            while ((line = _textReader.ReadLine()) != null)
+            while ((line = TextReader.ReadLine()) != null)
             {
-                if (_isInTab)
+                if (IsInTab)
                 {
                     if (GetLineType(line) == LineType.Directive && ParseDirective(line) is EndOfTabDirective)
                         yield return new EndOfTabDirective();
@@ -48,29 +53,29 @@ namespace ChordPro.Lib
                     }
                 }
 
-                _lineNumber++;
+                LineNumber++;
             }
         }
 
         internal Directive ParseDirective(string line)
         {
-            DirectiveComponents components;
-            DirectiveHandler handler;
-            Directive directive;
-            if (DirectiveComponents.TryParse(line, out components) && _directiveParsers.TryGetValue(components.Key, out handler) && handler.TryParse(components, out directive))
+            if (DirectiveComponents.TryParse(line, out DirectiveComponents components))
             {
-                if (directive is StartOfTabDirective)
-                    _isInTab = true;
+                if (components != null)
+                {
+                    if (DirectiveParsers.TryGetValue(components.Key, out DirectiveHandler handler) && handler.TryParse(components, out Directive directive))
+                    {
+                        if (directive is StartOfTabDirective)
+                            IsInTab = true;
 
-                if (directive is EndOfTabDirective)
-                    _isInTab = false;
+                        if (directive is EndOfTabDirective)
+                            IsInTab = false;
 
-                return directive;
+                        return directive;
+                    }
+                }
             }
-            else
-            {
-                throw new FormatException($"Invalid directive at line {_lineNumber}.");
-            }
+            throw new FormatException($"Invalid directive at line {LineNumber}.");
         }
 
         internal SongLine ParseSongLine(string line)
@@ -183,7 +188,7 @@ namespace ChordPro.Lib
             if (i > -1)
             {
                 if (!TryParseChord(syllable.Substring(0, i + 1), out chord))
-                    throw new FormatException($"Incorrect chord format at line {_lineNumber}.");
+                    throw new FormatException($"Incorrect chord format at line {LineNumber}.");
             }
 
             string text = syllable.Substring(i + 1);
@@ -217,9 +222,6 @@ namespace ChordPro.Lib
             Whitespace
         }
 
-        readonly TextReader _textReader;
-        readonly IReadOnlyDictionary<string, DirectiveHandler> _directiveParsers;
-        internal bool _isInTab = false;
-        int _lineNumber = 0;
+
     }
 }

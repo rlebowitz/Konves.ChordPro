@@ -48,7 +48,6 @@ namespace ChordPro.Tests
             string s = null;
 
             // Act
-            Parser.LineType result = Parser.GetLineType(s);
             Assert.Throws<ArgumentNullException>(() => Parser.GetLineType(s));
         }
 
@@ -280,7 +279,7 @@ namespace ChordPro.Tests
             Directive result = parser.ParseDirective(line);
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(expectedIsInTab, parser._isInTab);
+            Assert.Equal(expectedIsInTab, parser.IsInTab);
         }
 
         [Fact]
@@ -294,7 +293,7 @@ namespace ChordPro.Tests
             Directive result = parser.ParseDirective(line);
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(expectedIsInTab, parser._isInTab);
+            Assert.Equal(expectedIsInTab, parser.IsInTab);
         }
 
         [Fact]

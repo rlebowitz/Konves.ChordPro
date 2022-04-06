@@ -1,7 +1,4 @@
 ﻿using ChordPro.Lib.DirectiveHandlers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ChordPro.Lib
 {

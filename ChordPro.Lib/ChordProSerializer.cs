@@ -10,18 +10,17 @@ namespace ChordPro.Lib
             return Deserialize(stream, null);
         }
 
-        public static Document Deserialize(Stream stream, IEnumerable<DirectiveHandler>? customHandlers)
+        public static Document Deserialize(Stream stream, IEnumerable<DirectiveHandler> customHandlers)
         {
             using StreamReader reader = new(stream);
             Parser parser = new(reader);
             return new Document(parser.Parse());
         }
 
-        public static void Serialize(Document document, TextWriter writer, SerializerSettings settings)
+        public static void Serialize(Document document, TextWriter writer, SerializerSettings settings = null)
         {
             Guard.NotNull(document);
             Guard.NotNull(writer);
-            Guard.NotNull(settings);
             var index = DirectiveHandlerUtility.GetHandlersDictionaryByType(settings?.CustomHandlers);
 
             foreach (ILine line in document.Lines)

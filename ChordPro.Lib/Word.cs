@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace ChordPro.Lib
+﻿namespace ChordPro.Lib
 {
     public sealed class Word : Block
     {

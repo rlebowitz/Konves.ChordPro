@@ -1,5 +1,4 @@
-﻿using ChordPro.Lib;
-using ChordPro.Lib.Directives;
+﻿using ChordPro.Lib.Directives;
 
 namespace ChordPro.Lib.DirectiveHandlers
 {
