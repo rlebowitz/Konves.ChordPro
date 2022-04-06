@@ -1,6 +1,6 @@
-﻿using ChordPro.Lib.Directives;
+﻿using ChordPro.Library.Directives;
 
-namespace ChordPro.Lib.DirectiveHandlers
+namespace ChordPro.Library.DirectiveHandlers
 {
     public abstract class DirectiveHandler<TDirective> : DirectiveHandler where TDirective : Directive
     {

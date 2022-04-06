@@ -1,10 +1,10 @@
-﻿using ChordPro.Lib.DirectiveHandlers;
-using ChordPro.Lib.Directives;
+﻿using ChordPro.Library.DirectiveHandlers;
+using ChordPro.Library.Directives;
 using Xunit;
 
 namespace ChordPro.Tests.DirectiveHandlers
 {
-	public class NewSongHandlerTestFixture : KeyOnlyBaseTestFixture<NewSongDirective>
+    public class NewSongHandlerTestFixture : KeyOnlyBaseTestFixture<NewSongDirective>
 	{
 		public NewSongHandlerTestFixture() : base("{new_song}", "{ns}", NewSongHandler.Instance) { }
 

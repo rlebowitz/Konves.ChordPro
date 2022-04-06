@@ -1,6 +1,6 @@
-﻿using ChordPro.Lib.Directives;
+﻿using ChordPro.Library.Directives;
 
-namespace ChordPro.Lib.DirectiveHandlers
+namespace ChordPro.Library.DirectiveHandlers
 {
     public sealed class CommentItalicHandler : DirectiveHandler<CommentItalicDirective>
     {

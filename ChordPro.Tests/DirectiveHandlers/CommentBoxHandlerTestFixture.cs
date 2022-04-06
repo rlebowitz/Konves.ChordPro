@@ -1,11 +1,11 @@
-﻿using ChordPro.Lib;
-using ChordPro.Lib.DirectiveHandlers;
-using ChordPro.Lib.Directives;
+﻿using ChordPro.Library;
+using ChordPro.Library.DirectiveHandlers;
+using ChordPro.Library.Directives;
 using Xunit;
 
 namespace ChordPro.Tests.DirectiveHandlers
 {
-	public class CommentBoxHandlerTestFixture
+    public class CommentBoxHandlerTestFixture
 	{
 		[Fact]
 		[Trait("Category", "DirectiveHandler")]

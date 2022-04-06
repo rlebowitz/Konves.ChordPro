@@ -1,11 +1,11 @@
-﻿using ChordPro.Lib.Directives;
-using Xunit;
+﻿using Xunit;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ChordPro.Lib;
 using System.Collections;
+using ChordPro.Library.Directives;
+using ChordPro.Library;
 
 namespace ChordPro.Tests
 {

@@ -1,7 +1,7 @@
-﻿using ChordPro.Lib.DirectiveHandlers;
+﻿using ChordPro.Library.DirectiveHandlers;
 using System.Collections.Generic;
 
-namespace ChordPro.Lib
+namespace ChordPro.Library
 {
     public sealed class SerializerSettings
     {

@@ -1,4 +1,4 @@
-﻿using ChordPro.Lib;
+﻿using ChordPro.Library;
 using Xunit;
 
 namespace ChordPro.Tests

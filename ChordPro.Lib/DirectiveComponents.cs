@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace ChordPro.Lib
+namespace ChordPro.Library
 {
     public sealed class DirectiveComponents
     {
@@ -10,7 +10,7 @@ namespace ChordPro.Lib
         public string Value { get; private set; }
         private static Regex DirectiveRegex { get; } = new Regex(@"^\s*{\s*(?<key>[^\s:}]+)(?:\s+(?<subkey>[^:}]*))?(?:\:(?<value>[^}]+))?}\s*", RegexOptions.Compiled);
 
-       
+
         public DirectiveComponents(string key, string subKey, string value)
         {
             Key = key;
@@ -20,8 +20,9 @@ namespace ChordPro.Lib
 
         public static DirectiveComponents Parse(string s)
         {
-            if (TryParse(s, out DirectiveComponents components)) { 
-                return components; 
+            if (TryParse(s, out DirectiveComponents components))
+            {
+                return components;
             }
 
             throw new FormatException("Directive is not in the format {key[ subkey][:value]}");
@@ -44,10 +45,10 @@ namespace ChordPro.Lib
                 components = null;
                 return false;
             }
-            components = new DirectiveComponents(key.ToLower().Trim(), subKey?.Trim(), value?.Trim()); 
+            components = new DirectiveComponents(key.ToLower().Trim(), subKey?.Trim(), value?.Trim());
             return true;
         }
 
-       
+
     }
 }

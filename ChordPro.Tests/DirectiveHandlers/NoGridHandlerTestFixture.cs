@@ -1,10 +1,10 @@
-﻿using ChordPro.Lib.DirectiveHandlers;
-using ChordPro.Lib.Directives;
+﻿using ChordPro.Library.DirectiveHandlers;
+using ChordPro.Library.Directives;
 using Xunit;
 
 namespace ChordPro.Tests.DirectiveHandlers
 {
-	public class NoGridHandlerTestFixture : KeyOnlyBaseTestFixture<NoGridDirective>
+    public class NoGridHandlerTestFixture : KeyOnlyBaseTestFixture<NoGridDirective>
 	{
 		public NoGridHandlerTestFixture() : base("{no_grid}", "{ng}", NoGridHandler.Instance) { }
 

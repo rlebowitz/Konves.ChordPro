@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChordPro.Lib.Directives
+namespace ChordPro.Library.Directives
 {
     public sealed class PageTypeDirective : Directive
     {

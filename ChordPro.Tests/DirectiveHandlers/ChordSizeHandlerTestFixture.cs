@@ -1,7 +1,7 @@
-﻿using ChordPro.Lib.DirectiveHandlers;
-using ChordPro.Lib.Directives;
-using ChordPro.Lib;
-using Xunit;
+﻿using Xunit;
+using ChordPro.Library.DirectiveHandlers;
+using ChordPro.Library.Directives;
+using ChordPro.Library;
 
 namespace ChordPro.Tests.DirectiveHandlers
 {

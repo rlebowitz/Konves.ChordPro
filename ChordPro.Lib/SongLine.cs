@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace ChordPro.Lib
+namespace ChordPro.Library
 {
     public sealed class SongLine : ILine
     {

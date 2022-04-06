@@ -1,9 +1,9 @@
-﻿using ChordPro.Lib.DirectiveHandlers;
-using ChordPro.Lib.Directives;
+﻿using ChordPro.Library.DirectiveHandlers;
+using ChordPro.Library.Directives;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ChordPro.Tests")]
-namespace ChordPro.Lib
+namespace ChordPro.Library
 {
     internal sealed class Parser
     {

@@ -1,11 +1,11 @@
-﻿using ChordPro.Lib.DirectiveHandlers;
-using ChordPro.Lib.Directives;
-using ChordPro.Lib;
-using Xunit;
+﻿using Xunit;
+using ChordPro.Library.Directives;
+using ChordPro.Library.DirectiveHandlers;
+using ChordPro.Library;
 
 namespace ChordPro.Tests.DirectiveHandlers
 {
-	public abstract class KeyOnlyBaseTestFixture<TDirective> where TDirective : Directive, new()
+    public abstract class KeyOnlyBaseTestFixture<TDirective> where TDirective : Directive, new()
 	{
 		private string LongForm { get; }
 		private string ShortForm { get; }

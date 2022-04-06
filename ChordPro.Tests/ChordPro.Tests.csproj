@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChordPro.Lib\ChordPro.Lib.csproj" />
+    <ProjectReference Include="..\ChordPro.Lib\ChordPro.Library.csproj" />
   </ItemGroup>
 
 </Project>

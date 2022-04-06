@@ -1,4 +1,4 @@
-﻿using ChordPro.Lib;
+﻿using ChordPro.Library;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

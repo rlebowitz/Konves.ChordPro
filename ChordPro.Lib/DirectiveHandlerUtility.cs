@@ -1,6 +1,6 @@
-﻿using ChordPro.Lib.DirectiveHandlers;
+﻿using ChordPro.Library.DirectiveHandlers;
 
-namespace ChordPro.Lib
+namespace ChordPro.Library
 {
     internal static class DirectiveHandlerUtility
     {

@@ -1,6 +1,6 @@
-﻿using ChordPro.Lib;
-using ChordPro.Lib.DirectiveHandlers;
-using ChordPro.Lib.Directives;
+﻿using ChordPro.Library;
+using ChordPro.Library.DirectiveHandlers;
+using ChordPro.Library.Directives;
 using Moq;
 using Moq.Protected;
 using System;
@@ -8,7 +8,7 @@ using Xunit;
 
 namespace ChordPro.Tests.DirectiveHandlers
 {
-	public class DirectiveHandlerTestFixture
+    public class DirectiveHandlerTestFixture
 	{
 		[Fact]
 		[Trait("Category", "DirectiveHandler")]

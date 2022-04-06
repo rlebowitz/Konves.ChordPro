@@ -1,7 +1,7 @@
-﻿using ChordPro.Lib.DirectiveHandlers;
-using ChordPro.Lib.Directives;
+﻿using ChordPro.Library.DirectiveHandlers;
+using ChordPro.Library.Directives;
 
-namespace ChordPro.Lib
+namespace ChordPro.Library
 {
     public static class ChordProSerializer
     {
@@ -29,14 +29,16 @@ namespace ChordPro.Lib
                 {
                     continue;
                 }
-                else if (line is Directive directive) { 
-                    writer.WriteLine(index[line.GetType()].GetString(directive, settings?.ShortenDirectives == true)); 
+                else if (line is Directive directive)
+                {
+                    writer.WriteLine(index[line.GetType()].GetString(directive, settings?.ShortenDirectives == true));
                 }
                 else if (line is SongLine songLine)
                 {
                     Write(writer, songLine);
                 }
-                else if (line is TabLine tabLine) { 
+                else if (line is TabLine tabLine)
+                {
                     writer.WriteLine(tabLine.Text);
                 }
                 else
@@ -57,7 +59,8 @@ namespace ChordPro.Lib
                 {
                     foreach (Syllable syllable in word.Syllables)
                     {
-                        if (syllable.Chord != null) { 
+                        if (syllable.Chord != null)
+                        {
                             writer.Write($"[{syllable.Chord.Text}]");
                         }
                         writer.Write(syllable.Text);

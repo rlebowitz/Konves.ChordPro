@@ -1,10 +1,10 @@
-﻿using ChordPro.Lib.DirectiveHandlers;
-using ChordPro.Lib.Directives;
+﻿using ChordPro.Library.DirectiveHandlers;
+using ChordPro.Library.Directives;
 using Xunit;
 
 namespace ChordPro.Tests.DirectiveHandlers
 {
-	public class EndOfTabHandlerTestFixture : KeyOnlyBaseTestFixture<EndOfTabDirective>
+    public class EndOfTabHandlerTestFixture : KeyOnlyBaseTestFixture<EndOfTabDirective>
 	{
 		public EndOfTabHandlerTestFixture() : base("{end_of_tab}", "{eot}", EndOfTabHandler.Instance) { }
 

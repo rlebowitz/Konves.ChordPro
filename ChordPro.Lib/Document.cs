@@ -1,4 +1,4 @@
-﻿namespace ChordPro.Lib
+﻿namespace ChordPro.Library
 {
     public sealed class Document
     {

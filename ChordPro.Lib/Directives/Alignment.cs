@@ -1,4 +1,4 @@
-﻿namespace ChordPro.Lib.Directives
+﻿namespace ChordPro.Library.Directives
 {
     public enum Alignment
     {

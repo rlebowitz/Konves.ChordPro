@@ -1,10 +1,10 @@
-﻿using ChordPro.Lib.DirectiveHandlers;
-using ChordPro.Lib.Directives;
+﻿using ChordPro.Library.DirectiveHandlers;
+using ChordPro.Library.Directives;
 using Xunit;
 
 namespace ChordPro.Tests.DirectiveHandlers
 {
-	public class NewPageHandlerTestFixture : KeyOnlyBaseTestFixture<NewPageDirective>
+    public class NewPageHandlerTestFixture : KeyOnlyBaseTestFixture<NewPageDirective>
 	{
 		public NewPageHandlerTestFixture() : base("{new_page}", "{np}", NewPageHandler.Instance) { }
 
