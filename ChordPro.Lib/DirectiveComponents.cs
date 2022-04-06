@@ -5,6 +5,12 @@ namespace ChordPro.Lib
 {
     public sealed class DirectiveComponents
     {
+        public string Key { get; private set; }
+        public string SubKey { get; private set; }
+        public string Value { get; private set; }
+        private static Regex DirectiveRegex { get; } = new Regex(@"^\s*{\s*(?<key>[^\s:}]+)(?:\s+(?<subkey>[^:}]*))?(?:\:(?<value>[^}]+))?}\s*", RegexOptions.Compiled);
+
+       
         public DirectiveComponents(string key, string subKey, string value)
         {
             Key = key;
@@ -14,35 +20,32 @@ namespace ChordPro.Lib
 
         public static DirectiveComponents Parse(string s)
         {
-            DirectiveComponents components;
-            if (TryParse(s, out components))
-                return components;
+            if (TryParse(s, out DirectiveComponents components)) { 
+                return components; 
+            }
 
             throw new FormatException("Directive is not in the format {key[ subkey][:value]}");
         }
 
-        public static bool TryParse(string s, out DirectiveComponents components)
+        public static bool TryParse(string s, out DirectiveComponents? components)
         {
-            Match match = _directiveRegex.Match(s);
+            Match match = DirectiveRegex.Match(s);
 
             if (match == null || string.IsNullOrWhiteSpace(match.Groups["key"].Value))
             {
                 components = null;
                 return false;
             }
-
-            components = new DirectiveComponents(
-                key: match.Groups["key"]?.Value.ToLower().Trim(),
-                subKey: match.Groups["subkey"]?.Value.Trim(),
-                value: match.Groups["value"]?.Value.Trim());
+            components = new DirectiveComponents
+            {
+                Key = match.Groups["key"]?.Value.ToLower().Trim(),
+                SubKey = match.Groups["subkey"]?.Value.Trim(),
+                Value = match.Groups["value"]?.Value.Trim()
+            };
 
             return true;
         }
 
-        public string Key { get; }
-        public string SubKey { get; }
-        public string Value { get; }
-
-        static readonly Regex _directiveRegex = new Regex(@"^\s*{\s*(?<key>[^\s:}]+)(?:\s+(?<subkey>[^:}]*))?(?:\:(?<value>[^}]+))?}\s*", RegexOptions.Compiled);
+       
     }
 }
