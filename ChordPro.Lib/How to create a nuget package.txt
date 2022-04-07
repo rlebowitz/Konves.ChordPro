@@ -1,0 +1,4 @@
+﻿https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-pack
+https://stackoverflow.com/questions/42797993/package-version-is-always-1-0-0-with-dotnet-pack
+
+dotnet pack ChordPro.Lib\ChordPro.Library.csproj -o "..\Nugets" -c Release /p:Version=X.X.X
