@@ -85,8 +85,9 @@ namespace ChordPro.Library
 
         internal static IEnumerable<string> SplitIntoBlocks(string line)
         {
-            if (line == null)
-                throw new ArgumentNullException();
+            if (line == null) { 
+                throw new ArgumentNullException(nameof(line));
+            }
 
             int start = 0;
             bool isInBlock = false;

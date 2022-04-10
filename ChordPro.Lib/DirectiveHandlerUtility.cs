@@ -4,43 +4,7 @@ namespace ChordPro.Library
 {
     internal static class DirectiveHandlerUtility
     {
-        internal static IReadOnlyDictionary<string, DirectiveHandler> GetHandlersDictionaryByName(IEnumerable<DirectiveHandler> customParsers)
-        {
-            Dictionary<string, DirectiveHandler> index = new Dictionary<string, DirectiveHandler>();
-
-            foreach (DirectiveHandler parser in _defaultDirectiveParsers ?? Enumerable.Empty<DirectiveHandler>())
-            {
-                index[parser.LongName] = parser;
-                index[parser.ShortName] = parser;
-            }
-
-            foreach (DirectiveHandler parser in customParsers ?? Enumerable.Empty<DirectiveHandler>())
-            {
-                index[parser.LongName] = parser;
-                index[parser.ShortName] = parser;
-            }
-
-            return index;
-        }
-
-        internal static IReadOnlyDictionary<Type, DirectiveHandler> GetHandlersDictionaryByType(IEnumerable<DirectiveHandler> customParsers)
-        {
-            Dictionary<Type, DirectiveHandler> index = new Dictionary<Type, DirectiveHandler>();
-
-            foreach (DirectiveHandler parser in _defaultDirectiveParsers ?? Enumerable.Empty<DirectiveHandler>())
-            {
-                index[parser.DirectiveType] = parser;
-            }
-
-            foreach (DirectiveHandler parser in customParsers ?? Enumerable.Empty<DirectiveHandler>())
-            {
-                index[parser.DirectiveType] = parser;
-            }
-
-            return index;
-        }
-
-        static readonly IReadOnlyCollection<DirectiveHandler> _defaultDirectiveParsers = new DirectiveHandler[] {
+        private static IReadOnlyCollection<DirectiveHandler> DefaultDirectiveParsers { get; } = new DirectiveHandler[] {
             ChordColourHandler.Instance,
             ChordFontHandler.Instance,
             ChordSizeHandler.Instance,
@@ -66,5 +30,42 @@ namespace ChordPro.Library
             TitleHandler.Instance,
             TitlesHandler.Instance,
         };
+        internal static IReadOnlyDictionary<string, DirectiveHandler> GetHandlersDictionaryByName(IEnumerable<DirectiveHandler> customParsers)
+        {
+            Dictionary<string, DirectiveHandler> index = new Dictionary<string, DirectiveHandler>();
+
+            foreach (DirectiveHandler parser in DefaultDirectiveParsers ?? Enumerable.Empty<DirectiveHandler>())
+            {
+                index[parser.LongName] = parser;
+                index[parser.ShortName] = parser;
+            }
+
+            foreach (DirectiveHandler parser in customParsers ?? Enumerable.Empty<DirectiveHandler>())
+            {
+                index[parser.LongName] = parser;
+                index[parser.ShortName] = parser;
+            }
+
+            return index;
+        }
+
+        internal static IReadOnlyDictionary<Type, DirectiveHandler> GetHandlersDictionaryByType(IEnumerable<DirectiveHandler> customParsers)
+        {
+            Dictionary<Type, DirectiveHandler> index = new Dictionary<Type, DirectiveHandler>();
+
+            foreach (DirectiveHandler parser in DefaultDirectiveParsers ?? Enumerable.Empty<DirectiveHandler>())
+            {
+                index[parser.DirectiveType] = parser;
+            }
+
+            foreach (DirectiveHandler parser in customParsers ?? Enumerable.Empty<DirectiveHandler>())
+            {
+                index[parser.DirectiveType] = parser;
+            }
+
+            return index;
+        }
+
+        
     }
 }
