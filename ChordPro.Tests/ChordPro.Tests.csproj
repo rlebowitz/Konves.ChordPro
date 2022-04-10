@@ -8,12 +8,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\Abracadabra.pro" />
+    <None Remove="Data\Addams-Family-Theme-The.pro" />
+    <None Remove="Data\After-The-Goldrush.pro" />
+    <None Remove="Data\All-I-Want-To-Do-Is-Make-Love-To-You.pro" />
+    <None Remove="Data\All-My-LovingEight-Days-a-Week-C.pro" />
+    <None Remove="Data\All-Shook-Up.pro" />
+    <None Remove="Data\Ambitions.pro" />
     <None Remove="Data\everybody-hurts.cho" />
     <None Remove="Data\love-me-tender.cho" />
     <None Remove="Data\swing-low.cho" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Data\Abracadabra.pro" />
+    <EmbeddedResource Include="Data\Addams-Family-Theme-The.pro" />
+    <EmbeddedResource Include="Data\After-The-Goldrush.pro" />
+    <EmbeddedResource Include="Data\All-I-Want-To-Do-Is-Make-Love-To-You.pro" />
+    <EmbeddedResource Include="Data\All-My-LovingEight-Days-a-Week-C.pro" />
+    <EmbeddedResource Include="Data\All-Shook-Up.pro" />
+    <EmbeddedResource Include="Data\Ambitions.pro" />
     <EmbeddedResource Include="Data\everybody-hurts.cho" />
     <EmbeddedResource Include="Data\love-me-tender.cho" />
     <EmbeddedResource Include="Data\swing-low.cho" />
