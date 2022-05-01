@@ -1,0 +1,13 @@
+﻿.editor {
+    border: 1px solid black;
+    min-height: 200px;
+    width: 80%;
+    white-space: pre-line;
+    word-wrap: normal;
+    /*overflow-y: scroll;*/
+}
+
+.container .form-control {
+    height: auto;
+}
+

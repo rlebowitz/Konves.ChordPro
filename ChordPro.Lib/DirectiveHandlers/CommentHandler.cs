@@ -22,6 +22,6 @@ namespace ChordPro.Library.DirectiveHandlers
         public override string LongName { get { return "comment"; } }
         public override string ShortName { get { return "c"; } }
         public override ComponentPresence SubKey { get { return ComponentPresence.NotAllowed; } }
-        public override ComponentPresence Value { get { return ComponentPresence.Required; } }
+        public override ComponentPresence Value { get { return ComponentPresence.Optional; } }
     }
 }

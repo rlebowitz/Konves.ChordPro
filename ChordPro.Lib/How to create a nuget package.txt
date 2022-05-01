@@ -2,3 +2,7 @@
 https://stackoverflow.com/questions/42797993/package-version-is-always-1-0-0-with-dotnet-pack
 
 dotnet pack ChordPro.Lib\ChordPro.Library.csproj -o "..\Nugets" -c Release /p:Version=X.X.X
+
+https://spin.atomicobject.com/2021/01/05/local-nuget-package/
+
+nuget add ..\Nugets\ChordPro.Library.X.X.X.nupkg -Source ..\NugetRepo

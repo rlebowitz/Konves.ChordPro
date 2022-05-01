@@ -10,7 +10,7 @@ namespace ChordPro.Library
         private TextReader TextReader { get; }
         private IReadOnlyDictionary<string, DirectiveHandler> DirectiveParsers { get; }
         internal bool IsInTab { get; set; } = false;
-        private int LineNumber { get; set; } = 0;
+        private int LineNumber { get; set; } = 1;
 
         internal Parser(TextReader textReader) : this(textReader, null)
         {
@@ -80,14 +80,56 @@ namespace ChordPro.Library
 
         internal SongLine ParseSongLine(string line)
         {
-            return new SongLine(SplitIntoBlocks(line).Select(ParseBlock));
+            var blocks = SplitIntoBlocks(line);
+            return new SongLine(blocks.Select(ParseBlock));
         }
 
-        internal static IEnumerable<string> SplitIntoBlocks(string line)
+        //internal static IEnumerable<string> SplitIntoBlocks(string line)
+        //{
+        //    Guard.NotNull(line);
+
+        //    int start = 0;
+        //    bool isInBlock = false;
+        //    bool isInChord = false;
+        //    for (int i = 0; i < line.Length; i++)
+        //    {
+        //        if (isInBlock && !isInChord)
+        //        {
+        //            if (char.IsWhiteSpace(line[i]))
+        //            {
+        //                yield return line[start..i];
+        //                isInBlock = false;
+        //                continue;
+        //            }
+        //            else if (i == line.Length - 1)
+        //            {
+        //                yield return line.Substring(start, i - start + 1);
+        //                isInBlock = false;
+        //                continue;
+        //            }
+        //        }
+
+        //        if (!isInBlock && !char.IsWhiteSpace(line[i]))
+        //        {
+        //            isInBlock = true;
+        //            start = i;
+        //        }
+
+        //        if (!isInChord && line[i] == '[')
+        //        {
+        //            isInChord = true;
+        //        }
+
+        //        if (isInChord && line[i] == ']')
+        //        {
+        //            isInChord = false;
+        //        }
+        //    }
+        //}
+
+        internal IEnumerable<string> SplitIntoBlocks(string line)
         {
-            if (line == null) { 
-                throw new ArgumentNullException(nameof(line));
-            }
+            Guard.NotNull(line);
 
             int start = 0;
             bool isInBlock = false;
@@ -188,7 +230,7 @@ namespace ChordPro.Library
 
             if (i > -1)
             {
-                if (!TryParseChord(syllable.Substring(0, i + 1), out chord))
+                if (!TryParseChord(syllable[..(i + 1)], out chord))
                     throw new FormatException($"Incorrect chord format at line {LineNumber}.");
             }
 
@@ -199,17 +241,21 @@ namespace ChordPro.Library
 
         internal static LineType GetLineType(string line)
         {
-            if (line == null)
-                throw new ArgumentNullException(nameof(line));
+            Guard.NotNull(line);
 
             for (int i = 0; i < line.Length; i++)
             {
-                if (line[i] == '#')
-                    return LineType.Comment;
-                else if (line[i] == '{')
-                    return LineType.Directive;
-                else if (!char.IsWhiteSpace(line[i]))
-                    return LineType.Text;
+                switch (line[i])
+                {
+                    case '#':
+                        return LineType.Comment;
+                    case '{':
+                        return LineType.Directive;
+                    default:
+                        if (!char.IsWhiteSpace(line[i]))
+                            return LineType.Text;
+                        break;
+                }
             }
 
             return LineType.Whitespace;

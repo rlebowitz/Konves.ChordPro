@@ -1,0 +1,32 @@
+﻿@page "/editor"
+<div class="container mt-3">
+    <div class="btn-group">
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle show" @onclick="() => DisplaySubMenu = !DisplaySubMenu">File</button>
+            @if (DisplaySubMenu)
+            {
+                <ul class="dropdown-menu show" style="@Style">
+                    <li><button class="dropdown-item" @onclick="LoadFile">Open</button></li>
+                    <li><button class="dropdown-item" @onclick="SaveFile">Save</button></li>
+                </ul>
+            }
+        </div>
+        <button type="button" class="btn btn-primary" @onclick="Parse">Parse</button>
+    </div>
+</div>
+<br />
+<!-- https://stackoverflow.com/questions/49188623/how-to-make-contenteditable-div-with-bootstrap-form-control-class-auto-resize-fo -->
+<div class="container">
+    <p>
+        <div autofocus class="editor col-md-12 sol-sm-12 form-control" contenteditable='true'>
+            <pre>@Text</pre>
+        </div>
+    </p>
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <p>
+            <div class="col-md-12 sol-sm-2 form-control">@ErrorMessage</div>
+        </p>
+    }
+</div>
+

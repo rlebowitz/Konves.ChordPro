@@ -1,7 +1,7 @@
 {t: Abracadabra }  
 {key: Am}  
 {artist:Steve Miller Band}  
-Steve Miller Band - https://www.youtube.com/watch?v=vWPQQbldFjw    
+{link: https://www.youtube.com/watch?v=vWPQQbldFjw}
 Intro:   [Am] [Dm] [E7] [Am]   x 2      (first 2 lines)   
 [Am] I heat up, I [Dm] can’t cool down   
 [E7] You got me spinning, [Am] round and round   

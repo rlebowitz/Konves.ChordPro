@@ -43,6 +43,23 @@ namespace ChordPro.Tests.DirectiveHandlers
 
 		[Fact]
 		[Trait("Category", "DirectiveHandler")]
+		public void TryParseTest_ShortFormEmpty()
+		{
+			// Arrange
+			string comment = string.Empty;
+			string input = $"{{c: {comment}}}";
+			DirectiveComponents components = DirectiveComponents.Parse(input);
+			DirectiveHandler handler = CommentHandler.Instance;
+			// Act
+			bool result = handler.TryParse(components, out Directive directive);
+			// Assert
+			Assert.True(result);
+			Assert.IsType<CommentDirective>(directive);
+			Assert.Equal(comment, (directive as CommentDirective).Text);
+		}
+
+		[Fact]
+		[Trait("Category", "DirectiveHandler")]
 		public void GetStringTest_LongForm()
 		{
 			// Arrange

@@ -1,7 +1,7 @@
 {t: Addams Family Theme, The }  
 {key: C}  
 {artist:The Hit Crew}  
-https://www.youtube.com/watch?v=X6QzbvH-ZNo    (but in Bb)                    
+{link: https://www.youtube.com/watch?v=X6QzbvH-ZNo}
 {c: } 
 X – click fingers or tap uke   
 * – single strum   

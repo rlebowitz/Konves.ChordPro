@@ -1,0 +1,22 @@
+﻿@page "/editor"
+<div class="container mt-3">
+    <div class="btn-group">
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle @Show" @onclick="Toggle">File</button>
+            <ul class="dropdown-menu @Show" style="@Style">
+                <li><button class="dropdown-item" @onclick="LoadFile">Open</button></li>
+                <li><button class="dropdown-item">Save</button></li>
+            </ul>
+        </div>
+        <button type="button" class="btn btn-primary">Parse</button>
+        <button type="button" class="btn btn-primary">Update</button>
+    </div>
+</div>
+<br />
+
+<div class="container">
+    <p>
+        <div autofocus class="editor col-md-12 sol-sm-12 form-control" contenteditable='true'>@Text</div>
+    </p>
+</div>
+

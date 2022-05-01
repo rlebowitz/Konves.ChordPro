@@ -5,15 +5,40 @@ namespace ChordPro.Library
 {
     public static class ChordProSerializer
     {
+        /// <summary>
+        /// Deserializes ChordPro formatted text.
+        /// </summary>
+        /// <param name="stream">The specified text stream.</param>
+        /// <returns>A ChordPro Document.</returns>
+        /// <exception cref="FormatException">Throws if a parser error occurs.</exception>
         public static Document Deserialize(Stream stream)
         {
             return Deserialize(stream, null);
         }
 
+        /// <summary>
+        /// Deserializes ChordPro formatted text.
+        /// </summary>
+        /// <param name="stream">The specified text stream.</param>
+        /// <returns>A ChordPro Document.</returns>
+        /// <exception cref="FormatException">Throws if a parser error occurs.</exception>
         public static Document Deserialize(Stream stream, IEnumerable<DirectiveHandler> customHandlers)
         {
             using StreamReader reader = new(stream);
             Parser parser = new(reader);
+            return new Document(parser.Parse());
+        }
+
+        /// <summary>
+        /// Deserializes ChordPro formatted text.
+        /// </summary>
+        /// <param name="reader">The specified text reader.</param>
+        /// <returns>A ChordPro Document.</returns>
+        /// <exception cref="FormatException">Throws if a parser error occurs.</exception>
+        public static Document Deserialize(TextReader reader)
+        {
+            Guard.NotNull(reader);
+            Parser parser = new Parser(reader);
             return new Document(parser.Parse());
         }
 
@@ -25,24 +50,23 @@ namespace ChordPro.Library
 
             foreach (ILine line in document.Lines)
             {
-                if (line == null)
+                switch (line)
                 {
-                    continue;
+                    case null:
+                        continue;
+                    case Directive directive:
+                        var type = line.GetType();
+                        writer.WriteLine(index[type].GetString(directive, settings?.ShortenDirectives == true));
+                        break;
+                    case SongLine songLine:
+                        Write(writer, songLine);
+                        break;
+                    case TabLine tabLine:
+                        writer.WriteLine(tabLine.Text);
+                        break;
+                    default:
+                        throw new ArgumentException("Unknown line type");
                 }
-                else if (line is Directive directive)
-                {
-                    writer.WriteLine(index[line.GetType()].GetString(directive, settings?.ShortenDirectives == true));
-                }
-                else if (line is SongLine songLine)
-                {
-                    Write(writer, songLine);
-                }
-                else if (line is TabLine tabLine)
-                {
-                    writer.WriteLine(tabLine.Text);
-                }
-                else
-                    throw new ArgumentException("unknown line type");
             }
         }
 
@@ -55,20 +79,25 @@ namespace ChordPro.Library
                 if (addSpace)
                     writer.Write(' ');
 
-                if (block is Word word)
+                switch (block)
                 {
-                    foreach (Syllable syllable in word.Syllables)
-                    {
-                        if (syllable.Chord != null)
+                    case Word word:
                         {
-                            writer.Write($"[{syllable.Chord.Text}]");
+                            foreach (Syllable syllable in word.Syllables)
+                            {
+                                if (syllable.Chord != null)
+                                {
+                                    writer.Write($"[{syllable.Chord.Text}]");
+                                }
+                                writer.Write(syllable.Text);
+                            }
+
+                            break;
                         }
-                        writer.Write(syllable.Text);
-                    }
-                }
-                else if (block is Chord chord)
-                {
-                    writer.Write($"[{chord.Text}]");
+
+                    case Chord chord:
+                        writer.Write($"[{chord.Text}]");
+                        break;
                 }
 
                 addSpace = true;

@@ -16,18 +16,23 @@ namespace ChordPro.Library.DirectiveHandlers
             if (components.Key == LongName || components.Key == ShortName)
             {
                 if (Value == ComponentPresence.Required && string.IsNullOrWhiteSpace(components.Value))
+                {
                     return false;
+                }
 
                 if (Value == ComponentPresence.NotAllowed && !string.IsNullOrWhiteSpace(components.Value))
+                {
                     return false;
+                }
 
                 if (SubKey == ComponentPresence.Required && string.IsNullOrWhiteSpace(components.SubKey))
+                {
                     return false;
+                }
 
-                if (SubKey == ComponentPresence.NotAllowed && !string.IsNullOrWhiteSpace(components.SubKey))
-                    return false;
-
-                return TryCreate(components, out directive);
+                return SubKey == ComponentPresence.NotAllowed && !string.IsNullOrWhiteSpace(components.SubKey)
+                    ? false
+                    : TryCreate(components, out directive);
             }
             return false;
         }
@@ -46,32 +51,33 @@ namespace ChordPro.Library.DirectiveHandlers
 
         public string GetString(Directive directive, bool shorten = false)
         {
-            if (ReferenceEquals(directive, null))
-                throw new ArgumentNullException(nameof(directive));
-
+            Guard.NotNull(directive);
             string key = shorten ? ShortName : LongName;
             string subkey = GetSubKey(directive);
             string value = GetValue(directive);
 
             string subkeyString = GetSubKeyString(subkey);
             string valueString = GetValueString(value);
-
-            return $"{{{key}{subkeyString}{valueString}}}";
+            var temp = $"{key}: {subkeyString}{valueString}";
+            return $"{{{temp} }}";
         }
 
         internal string GetSubKeyString(string subkey)
         {
-            return SubKey != ComponentPresence.NotAllowed && !string.IsNullOrWhiteSpace(subkey) ? " " + subkey : null;
+            return SubKey != ComponentPresence.NotAllowed && !string.IsNullOrWhiteSpace(subkey) ? subkey : string.Empty;
         }
 
         internal string GetValueString(string value)
         {
-            return Value != ComponentPresence.NotAllowed && !string.IsNullOrWhiteSpace(value) ? ": " + value : null;
+            return Value != ComponentPresence.NotAllowed && !string.IsNullOrWhiteSpace(value) ? $": {value}" : string.Empty;
         }
 
         public abstract ComponentPresence SubKey { get; }
         public abstract ComponentPresence Value { get; }
         public abstract string LongName { get; }
+        /// <summary>
+        /// Not all ChordPro directives have a short name, therefore return the long name by default.
+        /// </summary>
         public virtual string ShortName { get { return LongName; } }
         public abstract Type DirectiveType { get; }
     }

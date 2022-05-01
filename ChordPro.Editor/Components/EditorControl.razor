@@ -1,0 +1,14 @@
+﻿<!-- https://stackoverflow.com/questions/49188623/how-to-make-contenteditable-div-with-bootstrap-form-control-class-auto-resize-fo -->
+<div class="container">
+    <p>
+        <div autofocus class="editor col-md-12 sol-sm-12 form-control" contenteditable='true'>
+            <pre>@Text</pre>
+        </div>
+    </p>
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <p>
+            <div class="col-md-12 sol-sm-2 form-control">@ErrorMessage</div>
+        </p>
+    }
+</div>
