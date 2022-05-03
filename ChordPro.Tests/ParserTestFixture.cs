@@ -7,11 +7,20 @@ using System.Collections;
 using ChordPro.Library.Directives;
 using ChordPro.Library;
 using System.Text;
+using Xunit.Abstractions;
 
 namespace ChordPro.Tests
 {
     public class ParserTestFixture
+
     {
+        private ITestOutputHelper Output { get; }
+
+        public ParserTestFixture(ITestOutputHelper output)
+        {
+            Output = Guard.NotNull(output);
+        }
+
         [Fact]
         public void ParseSongLineTest()
         {
@@ -83,18 +92,19 @@ namespace ChordPro.Tests
         [InlineData(" asdf[X] ", "asdf[X]")]
         [InlineData(" [x]asdf[x] ", "[x]asdf[x]")]
         [InlineData(" asdf[x]asdf ", "asdf[x]asdf")]
-        [InlineData("asdf [ X ]asdf asdf", "asdf", "[ X ]asdf", "asdf")]
-        [InlineData("asdf asdf[ X ] asdf", "asdf", "asdf[ X ]", "asdf")]
-        [InlineData("asdf [ x ]asdf[ x ] asdf", "asdf", "[ x ]asdf[ x ]", "asdf")]
-        [InlineData("asdf asdf[ x ]asdf asdf", "asdf", "asdf[ x ]asdf", "asdf")]
-        [InlineData("asdf [ x ][ x ]asdf[ x ][ x ] asdf", "asdf", "[ x ][ x ]asdf[ x ][ x ]", "asdf")]
-        [InlineData("asdf asdf[ x ][ x ]asdf asdf", "asdf", "asdf[ x ][ x ]asdf", "asdf")]
+        [InlineData("asdf [ X ]asdf asdf", "asdf", "[X]asdf", "asdf")]
+        [InlineData("asdf asdf[ X ] asdf", "asdf", "asdf[X]", "asdf")]
+        [InlineData("asdf [ x ]asdf[ x ] asdf", "asdf", "[x]asdf[x]", "asdf")]
+        [InlineData("asdf asdf[ x ]asdf asdf", "asdf", "asdf[x]asdf", "asdf")]
+        [InlineData("asdf [ x ][ x ]asdf[ x ][ x ] asdf", "asdf", "[x][x]asdf[x][x]", "asdf")]
+        [InlineData("asdf asdf[ x ][ x ]asdf asdf", "asdf", "asdf[x][x]asdf", "asdf")]
         public void DoSplitIntoBlocksTest(string line, params string[] expectedBlocks)
         {
-            Parser parser = new(new StringReader(line));
-            List<string> result = parser.SplitIntoBlocks(line).ToList();
+            var result = Parser.SplitIntoBlocks(line).ToArray();
             Assert.Equal(expectedBlocks, result);
         }
+
+       
 
         [Theory]
         [InlineData("[x]", "[x]")]
@@ -330,9 +340,9 @@ Song Line preceded by whitespace";
         public void SerializeTest()
         {
             //Arrange
-            string test = @"All my [Am/C] loving [Caug] darling I'll be [C] true (PAUSE 4)   
-{c: } 
-[Dm] [G7] [C] [Am] [F] [Dm] [Bb] [G7]    
+            string test = @"All my [Am/C] loving [Caug] darling I'll be [C] true (PAUSE 4)
+{c: }
+[Dm] [G7] [C] [Am] [F] [Dm] [Bb] [G7]
 ";
             //string test = @"All my [Am/C] loving [Caug] darling I'll be [C] true (PAUSE 4)   ";
             TextReader reader = new StringReader(test);
@@ -342,7 +352,8 @@ Song Line preceded by whitespace";
             Assert.NotNull(document);
             var sb = new StringBuilder();
             var writer = new StringWriter(sb);
-            ChordProSerializer.Serialize(document, writer, null);
+            var settings = new SerializerSettings { ShortenDirectives = true };
+            ChordProSerializer.Serialize(document, writer, settings);
             Assert.Equal(test, writer.ToString());
         }
     }

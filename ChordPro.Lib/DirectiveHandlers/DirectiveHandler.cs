@@ -58,18 +58,39 @@ namespace ChordPro.Library.DirectiveHandlers
 
             string subkeyString = GetSubKeyString(subkey);
             string valueString = GetValueString(value);
-            var temp = $"{key}: {subkeyString}{valueString}";
-            return $"{{{temp} }}";
+            var temp = $"{key}{subkeyString}{valueString}";
+            return $"{{{temp}}}";
         }
 
         internal string GetSubKeyString(string subkey)
         {
-            return SubKey != ComponentPresence.NotAllowed && !string.IsNullOrWhiteSpace(subkey) ? subkey : string.Empty;
+            if (string.IsNullOrWhiteSpace(subkey))
+            {
+                return string.Empty;
+            }
+            return SubKey switch
+            {
+                ComponentPresence.Required => $" {subkey}",
+                ComponentPresence.Optional => $" {subkey}",
+                ComponentPresence.NotAllowed => string.Empty,
+                _ => string.Empty,
+            };
         }
 
         internal string GetValueString(string value)
         {
-            return Value != ComponentPresence.NotAllowed && !string.IsNullOrWhiteSpace(value) ? $": {value}" : string.Empty;
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+
+            return Value switch
+            {
+                ComponentPresence.Required => $": {value}",
+                ComponentPresence.Optional => $": {value}",
+                ComponentPresence.NotAllowed => string.Empty,
+                _ => string.Empty,
+            };
         }
 
         public abstract ComponentPresence SubKey { get; }

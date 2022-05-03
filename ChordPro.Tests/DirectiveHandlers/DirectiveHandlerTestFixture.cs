@@ -121,7 +121,7 @@ namespace ChordPro.Tests.DirectiveHandlers
 
 		[Theory]
 		[Trait("Category", "DirectiveHandler")]
-        [InlineData("asdf", ComponentPresence.NotAllowed, null)]
+        [InlineData("asdf", ComponentPresence.NotAllowed, "")]
         [InlineData("asdf", ComponentPresence.Optional, " asdf")]
         [InlineData("asdf", ComponentPresence.Required, " asdf")]
 		public void GetSubKeyStringTest(string subkey, ComponentPresence subKeyPresence, string expectedResult)
@@ -150,12 +150,12 @@ namespace ChordPro.Tests.DirectiveHandlers
 
 		[Theory]
 		[Trait("Category", "DirectiveHandler")]
-        [InlineData("asdf", ComponentPresence.NotAllowed, null)]
+        [InlineData("asdf", ComponentPresence.NotAllowed, "")]
         [InlineData("asdf", ComponentPresence.Optional, ": asdf")]
         [InlineData("asdf", ComponentPresence.Required, ": asdf")]
-        [InlineData(null, ComponentPresence.NotAllowed, null)]
-        [InlineData(null, ComponentPresence.Optional, null)]
-        [InlineData(null, ComponentPresence.Required, null)]
+        [InlineData(null, ComponentPresence.NotAllowed, "")]
+        [InlineData(null, ComponentPresence.Optional, "")]
+        [InlineData(null, ComponentPresence.Required, "")]
 		public void GetValueStringTest(string value, ComponentPresence valuePresence, string expectedResult)
 		{
 			// Arrange

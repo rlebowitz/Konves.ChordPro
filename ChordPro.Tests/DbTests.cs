@@ -12,7 +12,7 @@ namespace ChordPro.Tests
     public class DbTests
     {
 
-        [Fact]
+       // [Fact]
         public void DeleteDb()
         {
             // Arrange
@@ -20,7 +20,7 @@ namespace ChordPro.Tests
             Assert.True(context.Database.EnsureDeleted());
         }
 
-        [Fact]
+        // [Fact]
         public void CreateDb()
         {
             // Arrange
