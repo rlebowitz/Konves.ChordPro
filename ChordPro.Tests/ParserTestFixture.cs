@@ -1,12 +1,13 @@
-﻿using Xunit;
+﻿using ChordPro.Library;
+using ChordPro.Library.Directives;
+using ChordPro.Library.Enums;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Collections;
-using ChordPro.Library.Directives;
-using ChordPro.Library;
 using System.Text;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace ChordPro.Tests
@@ -14,13 +15,6 @@ namespace ChordPro.Tests
     public class ParserTestFixture
 
     {
-        private ITestOutputHelper Output { get; }
-
-        public ParserTestFixture(ITestOutputHelper output)
-        {
-            Output = Guard.NotNull(output);
-        }
-
         [Fact]
         public void ParseSongLineTest()
         {
@@ -38,17 +32,20 @@ namespace ChordPro.Tests
             Assert.Equal(expectedBlockCount, result.Blocks.Count);
         }
 
-        [Fact]
-        public void GetLineTypeTest()
+        [Theory]
+        [InlineData("{directive}", LineType.Directive)]
+        [InlineData("    {directive}", LineType.Directive)]
+        [InlineData("# Comment", LineType.Comment)]
+        [InlineData("    # Comment", LineType.Comment)]
+        [InlineData("song line", LineType.Text)]
+        [InlineData("    song line", LineType.Text)]
+        [InlineData("", LineType.Whitespace)]
+        [InlineData("    ", LineType.Whitespace)]
+        public void GetLineTypeTest(string line, LineType expected)
         {
-            DoGetLineTypeTest("{directive}", Parser.LineType.Directive);
-            DoGetLineTypeTest("    {directive}", Parser.LineType.Directive);
-            DoGetLineTypeTest("# Comment", Parser.LineType.Comment);
-            DoGetLineTypeTest("    # Comment", Parser.LineType.Comment);
-            DoGetLineTypeTest("song line", Parser.LineType.Text);
-            DoGetLineTypeTest("    song line", Parser.LineType.Text);
-            DoGetLineTypeTest("", Parser.LineType.Whitespace);
-            DoGetLineTypeTest("    ", Parser.LineType.Whitespace);
+            LineType result = Parser.GetLineType(line);
+            // Assert
+            Assert.Equal(result, expected);
         }
 
         [Fact]
@@ -60,24 +57,6 @@ namespace ChordPro.Tests
             // Act
             Assert.Throws<ArgumentNullException>(() => Parser.GetLineType(s));
         }
-
-        private void DoGetLineTypeTest(string line, Parser.LineType expected)
-        {
-            // Arrange
-            // Act
-            Parser.LineType result = Parser.GetLineType(line);
-            // Assert
-            Assert.Equal(result, expected);
-        }
-
-        //[Theory]
-        //[InlineData(null)]
-        //public void SplitIntoBlocksTest_Null(string line)
-        //{
-        //    Parser parser = new(new StringReader(line));
-        //    // Act
-        //    Assert.Throws<ArgumentNullException>(() => parser.SplitIntoBlocks(line).ToList());
-        //}
 
         [Theory]
         [InlineData("asdf [X]asdf asdf", "asdf", "[X]asdf", "asdf")]
@@ -173,11 +152,9 @@ namespace ChordPro.Tests
         private void DoParseSyllableTest(string s, Syllable expectedSyllable)
         {
             // Arrange
-            Parser sut = new Parser(null);
-
+            Parser parser = new Parser(null);
             // Act
-            Syllable result = sut.ParseSyllable(s);
-
+            Syllable result = parser.ParseSyllable(s);
             // Assert
             Assert.NotNull(result);
             Assert.Equal(expectedSyllable?.Chord?.Text, result?.Chord?.Text);
@@ -344,7 +321,9 @@ Song Line preceded by whitespace";
 {c: }
 [Dm] [G7] [C] [Am] [F] [Dm] [Bb] [G7]
 ";
-            //string test = @"All my [Am/C] loving [Caug] darling I'll be [C] true (PAUSE 4)   ";
+            var expected = @"All my [Am/C] loving [Caug] darling I'll be [C] true (PAUSE 4)
+{c}
+[Dm] [G7] [C] [Am] [F] [Dm] [Bb] [G7]";
             TextReader reader = new StringReader(test);
             var parser = new Parser(reader);
             // Act
@@ -354,7 +333,7 @@ Song Line preceded by whitespace";
             var writer = new StringWriter(sb);
             var settings = new SerializerSettings { ShortenDirectives = true };
             ChordProSerializer.Serialize(document, writer, settings);
-            Assert.Equal(test, writer.ToString());
+            Assert.Equal(expected, writer.ToString().Trim());
         }
     }
 }

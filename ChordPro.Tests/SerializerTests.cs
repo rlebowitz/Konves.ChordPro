@@ -21,6 +21,7 @@ namespace ChordPro.Tests
                 "[Dm][G7][C][Am][F][G7][C] (PAUSE 4)".Trim()
             };
 
+            string expected = $"{{c}}{Environment.NewLine}[Dm][G7][C][Am][F][Dm][Bb][G7]{Environment.NewLine}[Dm][G7][C][Am][F][G7][C] (PAUSE 4)";
             string text = string.Join(Environment.NewLine, lines);
             List<ILine> result;
             using (TextReader reader = new StringReader(text))
@@ -42,7 +43,7 @@ namespace ChordPro.Tests
             string output = sb.ToString().Trim();
 
             Assert.NotNull(output);
-            Assert.Equal(text, output);
+            Assert.Equal(expected, output);
         }
 
         [Theory]

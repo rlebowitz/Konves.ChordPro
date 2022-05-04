@@ -1,12 +1,13 @@
 ﻿using ChordPro.Library.DirectiveHandlers;
 using ChordPro.Library.Directives;
+using ChordPro.Library.Enums;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 [assembly: InternalsVisibleTo("ChordPro.Tests")]
 namespace ChordPro.Library
 {
-    internal sealed class Parser
+    internal sealed partial class Parser
     {
         private TextReader TextReader { get; }
         private IReadOnlyDictionary<string, DirectiveHandler> DirectiveParsers { get; }
@@ -304,14 +305,6 @@ namespace ChordPro.Library
             }
 
             return LineType.Whitespace;
-        }
-
-        internal enum LineType
-        {
-            Comment,
-            Text,
-            Directive,
-            Whitespace
         }
 
 
