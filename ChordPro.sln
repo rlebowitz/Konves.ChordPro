@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChordPro.Tests", "ChordPro.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChordPro.DB", "ChordPro.DB\ChordPro.DB.csproj", "{2792FD5F-02E0-4D76-AAC1-A564807AA0E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChordPro.Editor", "ChordPro.Editor\ChordPro.Editor.csproj", "{570224B8-3E26-4A9A-A14F-B2296715E266}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChordPro.Editor", "ChordPro.Editor\ChordPro.Editor.csproj", "{570224B8-3E26-4A9A-A14F-B2296715E266}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChordPro.Web", "ChordPro.Web\ChordPro.Web.csproj", "{46C3AE45-3CB4-41AC-8EB4-0C250AE738F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{570224B8-3E26-4A9A-A14F-B2296715E266}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{570224B8-3E26-4A9A-A14F-B2296715E266}.Release|Any CPU.Build.0 = Release|Any CPU
 		{570224B8-3E26-4A9A-A14F-B2296715E266}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{46C3AE45-3CB4-41AC-8EB4-0C250AE738F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46C3AE45-3CB4-41AC-8EB4-0C250AE738F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46C3AE45-3CB4-41AC-8EB4-0C250AE738F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46C3AE45-3CB4-41AC-8EB4-0C250AE738F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

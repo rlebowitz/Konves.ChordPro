@@ -8,29 +8,22 @@ using System.Text;
 
 namespace ChordPro.Editor.Pages
 {
-    public partial class Index
+    public partial class Index 
     {
         private string Text { get; set; }
+        private bool DisplayEditor { get; set; }
         private string FileName { get; set; }
         private Document Document { get; set; }
         private string ErrorMessage { get; set; }
-        private bool DisplayEditor => !string.IsNullOrEmpty(Text);
-        private bool DisplayError => !string.IsNullOrEmpty(ErrorMessage);
-        private FilePickerFileType FileTypes { get; } = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-             {
-                 { DevicePlatform.WinUI, new[] { "*.pro", "*.cho" } },
-                 { DevicePlatform.Android, new[] { "text/plain" } },
-             });
 
-        private async Task LoadFile(MenuItemEventArgs args)
+        private async Task LoadFile()
         {
             ErrorMessage = String.Empty;
             try
             {
                 var options = new PickOptions
                 {
-                    PickerTitle = "Please select a ChordPro file",
-                    FileTypes = FileTypes
+                    PickerTitle = "Please select a ChordPro file"
                 };
                 var result = await FilePicker.PickAsync(options);
                 if (result == null)
@@ -44,9 +37,10 @@ namespace ChordPro.Editor.Pages
             {
                 ErrorMessage = ex.Message;
             }
+            DisplayEditor = false;
         }
 
-        private async Task SaveFile(MenuItemEventArgs args)
+        private async Task SaveFile()
         {
             ErrorMessage = String.Empty;
             try
@@ -63,9 +57,10 @@ namespace ChordPro.Editor.Pages
             {
                 ErrorMessage = iox.Message;
             }
+            DisplayEditor = false;
         }
 
-        private void Parse(MenuItemEventArgs args)
+        private void Parse()
         {
             ErrorMessage = String.Empty;
             if (!string.IsNullOrWhiteSpace(Text))
@@ -84,11 +79,6 @@ namespace ChordPro.Editor.Pages
                     ErrorMessage = fex.Message;
                 }
             }
-        }
-
-        private static void Exit(MenuItemEventArgs args)
-        {
-            Application.Current.Quit();
         }
 
     }
