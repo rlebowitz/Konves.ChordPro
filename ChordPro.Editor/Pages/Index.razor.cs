@@ -54,7 +54,7 @@ namespace ChordPro.Editor.Pages
                 if (!string.IsNullOrWhiteSpace(FileName))
                 {
                     // Act
-                    using StreamWriter writer = new(new FileStream(Path.Combine("D:\\Music", FileName), FileMode.Create));
+                    using StreamWriter writer = new(new FileStream(Path.Combine("C:\\Music", FileName), FileMode.Create));
                     await writer.WriteAsync(Text);
                     await writer.FlushAsync();
                 }
