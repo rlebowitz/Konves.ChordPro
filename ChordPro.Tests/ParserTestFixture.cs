@@ -89,6 +89,7 @@ namespace ChordPro.Tests
         [InlineData("asdf asdf[ x ]asdf asdf", "asdf", "asdf[ x ]asdf", "asdf")]
         [InlineData("asdf [ x ][ x ]asdf[ x ][ x ] asdf", "asdf", "[ x ][ x ]asdf[ x ][ x ]", "asdf")]
         [InlineData("asdf asdf[ x ][ x ]asdf asdf", "asdf", "asdf[ x ][ x ]asdf", "asdf")]
+        [InlineData("[Dm][G7][C][Am][F][Dm][Bb][G7]", "[Dm][G7][C][Am][F][Dm][Bb][G7]")]
         public void DoSplitIntoBlocksTest(string line, params string[] expectedBlocks)
         {
             Parser parser = new(new StringReader(line));
