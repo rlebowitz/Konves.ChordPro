@@ -79,8 +79,8 @@ namespace ChordPro.Tests
         [InlineData("asdf asdf[ x ][ x ]asdf asdf", "asdf", "asdf[x][x]asdf", "asdf")]
         public void DoSplitIntoBlocksTest(string line, params string[] expectedBlocks)
         {
-            Parser parser = new(new StringReader(line));
-            List<string> result = parser.SplitIntoBlocks(line).ToList();
+  //          Parser parser = new(new StringReader(line));
+            List<string> result = Parser.SplitIntoBlocks(line).ToList();
             Assert.Equal(expectedBlocks, result);
         }
 
