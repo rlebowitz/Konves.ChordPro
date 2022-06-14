@@ -20,7 +20,9 @@ namespace ChordPro.Editor
 
             builder.Services.AddSingleton<WeatherForecastService>();
             builder.Services.AddScoped<DialogService>();
-
+#if WINDOWS
+            builder.Services.AddTransient<IFileSavePicker, Platforms.Windows.FileSavePicker>();
+#endif
             return builder.Build();
         }
     }

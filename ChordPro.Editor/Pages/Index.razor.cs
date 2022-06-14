@@ -12,12 +12,13 @@ namespace ChordPro.Editor.Pages
     {
         [Inject]
         private DialogService DialogService { get; set; }
+        [Inject]
+        private IFileSavePicker FileSavePicker { get; set; }
         private string Text { get; set; }
         private string FileName { get; set; }
         private Document Document { get; set; }
-        private string ErrorMessage { get; set; }
         private bool DisplayEditor => !string.IsNullOrEmpty(Text);
-        private bool DisplayError => !string.IsNullOrEmpty(ErrorMessage);
+
         private FilePickerFileType FileTypes { get; } = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
              {
                  { DevicePlatform.WinUI, new[] { "*.pro", "*.cho" } },
@@ -28,7 +29,6 @@ namespace ChordPro.Editor.Pages
 
         private async Task LoadFile(MenuItemEventArgs args)
         {
-            ErrorMessage = String.Empty;
             try
             {
                 var options = new PickOptions
@@ -46,38 +46,36 @@ namespace ChordPro.Editor.Pages
             }
             catch (Exception ex)
             {
-                ErrorMessage = ex.Message;
+                await DialogService.OpenAsync("Load File Error", ds => Index.ParseContent(ex.Message), DialogOptions);
             }
         }
 
         private async Task SaveFile(MenuItemEventArgs args)
         {
-            ErrorMessage = String.Empty;
             try
             {
                 if (!string.IsNullOrWhiteSpace(FileName))
                 {
-                    // Act
-                    using StreamWriter writer = new(new FileStream(Path.Combine("C:\\Music", FileName), FileMode.Create));
+                    var filePath = await FileSavePicker.SaveFile(FileName);
+
+                    using StreamWriter writer = new(new FileStream(filePath, FileMode.Create));
                     await writer.WriteAsync(Text);
                     await writer.FlushAsync();
                 }
             }
             catch (IOException iox)
             {
-                await DialogService.OpenAsync("Save Error", ds => ParseContent(iox.Message), DialogOptions);
+                await DialogService.OpenAsync("Save Error", ds => Index.ParseContent(iox.Message), DialogOptions);
 
             }
         }
 
         private async Task Parse(MenuItemEventArgs args)
         {
-            ErrorMessage = string.Empty;
             if (!string.IsNullOrWhiteSpace(Text))
             {
                 try
                 {
-                    ErrorMessage = string.Empty;
                     Document = ChordProSerializer.Deserialize(new StringReader(Text));
                     var sb = new StringBuilder();
                     using TextWriter writer = new StringWriter(sb);
@@ -91,7 +89,7 @@ namespace ChordPro.Editor.Pages
             }
         }
 
-        private RenderFragment ParseContent(string content) => builder =>
+        private static RenderFragment ParseContent(string content) => builder =>
         {
             builder.OpenElement(0, "div");
             builder.OpenElement(1, "div");
