@@ -1,5 +1,6 @@
 ﻿using ChordPro.Editor.Data;
 using Microsoft.AspNetCore.Components.WebView.Maui;
+using Radzen;
 
 namespace ChordPro.Editor
 {
@@ -18,6 +19,7 @@ namespace ChordPro.Editor
             builder.Services.AddMauiBlazorWebView();
 
             builder.Services.AddSingleton<WeatherForecastService>();
+            builder.Services.AddScoped<DialogService>();
 
             return builder.Build();
         }

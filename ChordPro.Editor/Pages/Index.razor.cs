@@ -10,6 +10,8 @@ namespace ChordPro.Editor.Pages
 {
     public partial class Index
     {
+        [Inject]
+        private DialogService DialogService { get; set; }
         private string Text { get; set; }
         private string FileName { get; set; }
         private Document Document { get; set; }
@@ -21,6 +23,8 @@ namespace ChordPro.Editor.Pages
                  { DevicePlatform.WinUI, new[] { "*.pro", "*.cho" } },
                  { DevicePlatform.Android, new[] { "text/plain" } },
              });
+
+        private DialogOptions DialogOptions { get; set; } = new DialogOptions { ShowTitle = true, Style = "min-height:auto;min-width:auto;width:auto" };
 
         private async Task LoadFile(MenuItemEventArgs args)
         {
@@ -61,13 +65,14 @@ namespace ChordPro.Editor.Pages
             }
             catch (IOException iox)
             {
-                ErrorMessage = iox.Message;
+                await DialogService.OpenAsync("Save Error", ds => ParseContent(iox.Message), DialogOptions);
+
             }
         }
 
-        private void Parse(MenuItemEventArgs args)
+        private async Task Parse(MenuItemEventArgs args)
         {
-            ErrorMessage = String.Empty;
+            ErrorMessage = string.Empty;
             if (!string.IsNullOrWhiteSpace(Text))
             {
                 try
@@ -81,10 +86,23 @@ namespace ChordPro.Editor.Pages
                 }
                 catch (FormatException fex)
                 {
-                    ErrorMessage = fex.Message;
+                    await DialogService.OpenAsync("Parsing Error", ds => ParseContent(fex.Message), DialogOptions);
                 }
             }
         }
+
+        private RenderFragment ParseContent(string content) => builder =>
+        {
+            builder.OpenElement(0, "div");
+            builder.OpenElement(1, "div");
+            builder.AddAttribute(2, "class", "row");
+            builder.OpenElement(3, "div");
+            builder.AddAttribute(4, "class", "col-md-12");
+            builder.AddContent(5, content);
+            builder.CloseElement();
+            builder.CloseElement();
+            builder.CloseElement();
+        };
 
         private static void Exit(MenuItemEventArgs args)
         {

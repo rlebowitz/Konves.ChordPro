@@ -7,8 +7,8 @@
     <RadzenMenuItem Text="File" Icon="home">
         <RadzenMenuItem Text="Open" Icon="open_in_new" Click="@(args => LoadFile(args))"></RadzenMenuItem>
         <RadzenMenuItem Text="Parse" Icon="line_weight" Click="@(args => Parse(args))"></RadzenMenuItem>
-        <RadzenMenuItem Text="Save" Icon="line_weight" Click="@(args => SaveFile(args))"></RadzenMenuItem>
-        <RadzenMenuItem Text="Exit" Icon="line_weight" Click="@(args => Index.Exit(args))"></RadzenMenuItem>
+        <RadzenMenuItem Text="Save" Icon="eject" Click="@(args => SaveFile(args))"></RadzenMenuItem>
+        <RadzenMenuItem Text="Exit" Icon="exit_to_app" Click="@(args => Index.Exit(args))"></RadzenMenuItem>
     </RadzenMenuItem>
 </RadzenMenu>
 <br />
@@ -20,12 +20,6 @@
             <div autofocus class="editor col-md-12 sol-sm-12 form-control" contenteditable='true'>
                 @Text
             </div>
-        </p>
-    }
-    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
-    {
-        <p>
-            <div class="editor col-md-12 sol-sm-2 form-control">@ErrorMessage</div>
         </p>
     }
 </div>
