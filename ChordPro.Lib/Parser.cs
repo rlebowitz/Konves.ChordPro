@@ -1,16 +1,20 @@
 ﻿using ChordPro.Library.DirectiveHandlers;
 using ChordPro.Library.Directives;
+using ChordPro.Library.Enums;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 [assembly: InternalsVisibleTo("ChordPro.Tests")]
 namespace ChordPro.Library
 {
-    internal sealed class Parser
+    internal sealed partial class Parser
     {
         private TextReader TextReader { get; }
         private IReadOnlyDictionary<string, DirectiveHandler> DirectiveParsers { get; }
         internal bool IsInTab { get; set; } = false;
         private int LineNumber { get; set; } = 1;
+        private const string Pattern = @"\[\s*([a-zA-Z0-9])\s*\]";
+       
 
         internal Parser(TextReader textReader) : this(textReader, null)
         {
@@ -127,47 +131,89 @@ namespace ChordPro.Library
         //    }
         //}
 
-        internal IEnumerable<string> SplitIntoBlocks(string line)
+        private static string Clean(Match match)
+        {
+            if (match.Groups.Count == 2)
+            {
+                return $"[{match.Groups[1].Value}]";
+            }
+            return match.Value;
+        }
+
+        internal static IEnumerable<string> SplitIntoBlocks(string line)
         {
             Guard.NotNull(line);
 
-            int start = 0;
-            bool isInBlock = false;
-            bool isInChord = false;
-            for (int i = 0; i < line.Length; i++)
-            {
-                if (isInBlock && !isInChord)
-                {
-                    if (char.IsWhiteSpace(line[i]))
-                    {
-                        yield return line.Substring(start, i - start);
-                        isInBlock = false;
-                        continue;
-                    }
-                    else if (i == line.Length - 1)
-                    {
-                        yield return line.Substring(start, i - start + 1);
-                        isInBlock = false;
-                        continue;
-                    }
-                }
+            //int blockStart = 0;
+            //bool isInBlock = false;
+            //bool isInChord = false;
 
-                if (!isInBlock && !char.IsWhiteSpace(line[i]))
-                {
-                    isInBlock = true;
-                    start = i;
-                }
+            // remove any whitespace found in any chords
+            var evaluator = new MatchEvaluator(Clean);
+            var newLine = Regex.Replace(line, Pattern, evaluator);
+            Console.Write(newLine);
+            return Regex.Split(newLine, "\\s+").Where(s => s != string.Empty).ToArray(); 
 
-                if (!isInChord && line[i] == '[')
-                {
-                    isInChord = true;
-                }
+            //for (int i = 0; i < line.Length; i++)
+            //{
+                
+            //    if (i == line.Length - 1)
+            //    {
+            //        yield return line.Substring(blockStart, i - blockStart + 1);
+            //        isInBlock = false;
+            //        continue;
+            //    }
 
-                if (isInChord && line[i] == ']')
-                {
-                    isInChord = false;
-                }
-            }
+            //    var ch = line[i];
+
+            //    // indicate we are at the start of a block.
+            //    // a block can contain
+            //    if (!isInBlock && !char.IsWhiteSpace(ch))
+            //    {
+            //        isInBlock = true;
+            //        blockStart = i;
+            //    }
+            //    if (isInBlock && char.IsWhiteSpace(ch))
+            //    {
+            //        // at the end of a block
+            //            yield return line.Substring(blockStart, i - blockStart);
+            //            isInBlock = false;
+            //            continue;
+            //    }
+            //    switch (ch)
+            //    {
+            //        case '[':
+            //            isInChord = true;
+            //            continue;
+            //        case ']':
+            //            isInChord = false;
+            //            continue;
+
+            //    }
+            //        else if (i == line.Length - 1)
+            //        {
+            //            yield return line.Substring(blockStart, i - blockStart + 1);
+            //            isInBlock = false;
+            //            continue;
+            //        }
+            //    }
+
+            //    if (!isInBlock && !char.IsWhiteSpace(line[i]))
+            //    {
+            //        isInBlock = true;
+            //        blockStart = i;
+            //    }
+
+            //    if (!isInChord && line[i] == '[')
+            //    {
+            //        isInChord = true;
+            //    }
+
+            //    if (isInChord && line[i] == ']')
+            //    {
+            //        isInChord = false;
+            //    }
+            // }
         }
 
         internal static IEnumerable<string> SplitIntoSyllables(string block)
@@ -259,14 +305,6 @@ namespace ChordPro.Library
             }
 
             return LineType.Whitespace;
-        }
-
-        internal enum LineType
-        {
-            Comment,
-            Text,
-            Directive,
-            Whitespace
         }
 
 

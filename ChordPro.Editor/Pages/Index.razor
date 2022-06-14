@@ -1,16 +1,31 @@
 ﻿@using ChordPro.Editor.Components
+@using Radzen
 @page "/"
 @layout NewLayout
-
 <PageTitle>ChordPro Editor</PageTitle>
-<TabControl>
-  <TabPage Text="Tab 1">
-    <EditorControl Text="Tab 1"></EditorControl>
-  </TabPage>
-  <TabPage Text="Tab 2">
-    <EditorControl Text="Tab 2"></EditorControl>
-  </TabPage>
-  <TabPage Text="Tab 3">
-    <EditorControl Text="Tab 3"></EditorControl>
-  </TabPage>
-</TabControl>
+<RadzenMenu>
+    <RadzenMenuItem Text="File" Icon="home">
+        <RadzenMenuItem Text="Open" Icon="open_in_new" Click="@(args => LoadFile(args))"></RadzenMenuItem>
+        <RadzenMenuItem Text="Parse" Icon="line_weight" Click="@(args => Parse(args))"></RadzenMenuItem>
+        <RadzenMenuItem Text="Save" Icon="line_weight" Click="@(args => SaveFile(args))"></RadzenMenuItem>
+        <RadzenMenuItem Text="Exit" Icon="line_weight" Click="@(args => Index.Exit(args))"></RadzenMenuItem>
+    </RadzenMenuItem>
+</RadzenMenu>
+<br />
+<!-- https://stackoverflow.com/questions/49188623/how-to-make-contenteditable-div-with-bootstrap-form-control-class-auto-resize-fo -->
+<div class="container">
+    @if (DisplayEditor)
+    {
+        <p>
+            <div autofocus class="editor col-md-12 sol-sm-12 form-control" contenteditable='true'>
+                @Text
+            </div>
+        </p>
+    }
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <p>
+            <div class="editor col-md-12 sol-sm-2 form-control">@ErrorMessage</div>
+        </p>
+    }
+</div>
